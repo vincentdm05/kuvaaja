@@ -1,0 +1,9 @@
+# CMake-generated files
+CMakeCache.txt
+CMakeFiles
+CMakeLists.txt.user
+Makefile
+cmake_install.cmake
+
+# Executable
+kuvaaja
