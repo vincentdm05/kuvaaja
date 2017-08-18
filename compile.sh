@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd `dirname "$0"`
+cd "`dirname "$0"`"
 
 root_dir=`pwd`
 build_dir="$root_dir"/build
