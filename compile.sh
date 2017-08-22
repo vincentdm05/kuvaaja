@@ -15,4 +15,4 @@ fi
 cd "$build_dir"
 
 cmake ..
-make
+make -j `getconf _NPROCESSORS_ONLN`
