@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+
+#include "Shader.hpp"
 
 int main(int argc, char *argv[]) {
   if (!glfwInit()) {
@@ -57,8 +60,13 @@ int main(int argc, char *argv[]) {
   glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
   glBufferData(GL_ARRAY_BUFFER, sizeof(triangle_data), triangle_data, GL_STATIC_DRAW);
 
+  std::string shaderFolder = "shaders/";
+  GLuint programID = shader::load((shaderFolder + "vertex.glsl").c_str(), (shaderFolder + "fragment.glsl").c_str());
+
   do {
     glClear(GL_COLOR_BUFFER_BIT);
+
+    glUseProgram(programID);
 
     // Draw data
     glEnableVertexAttribArray(0);
