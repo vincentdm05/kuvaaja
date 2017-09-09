@@ -4,6 +4,8 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Shader.hpp"
 
@@ -21,7 +23,9 @@ int main(int argc, char *argv[]) {
 
   // Create a context
   GLFWwindow* window;
-  window = glfwCreateWindow(1024, 768, "kuvaaja", NULL, NULL);
+  const GLuint windowWidth = 1024;
+  const GLuint windowHeight = 768;
+  window = glfwCreateWindow(windowWidth, windowHeight, "kuvaaja", NULL, NULL);
   if (window == NULL) {
     fprintf(stderr, "Failed to open GLFW window.\n");
     glfwTerminate();
@@ -60,13 +64,33 @@ int main(int argc, char *argv[]) {
   glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
   glBufferData(GL_ARRAY_BUFFER, sizeof(triangle_data), triangle_data, GL_STATIC_DRAW);
 
+  // Load, compile and bind shaders
   std::string shaderFolder = "shaders/";
   GLuint programID = shader::load((shaderFolder + "vertex.glsl").c_str(), (shaderFolder + "fragment.glsl").c_str());
+
+  // Model matrix for transformation from object space to world space
+  glm::mat4 model = glm::mat4(1.0f);
+
+  // View matrix for transformation from world space to camera (or eye) space
+  glm::vec3 camera = glm::vec3(4.0f, 3.0f, 3.0f);
+  glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+  glm::mat4 view = glm::lookAt(camera, glm::vec3(0.0f), up);
+
+  // Projection matrix for transformation from camera space to projective space
+  GLfloat fieldOfView = glm::radians(45.0f);
+  GLfloat aspectRatio = windowWidth / windowHeight;
+  GLfloat cameraNear = 0.1f;
+  GLfloat cameraFar = 100.0f;
+  glm::mat4 projection = glm::perspective(fieldOfView, aspectRatio, cameraNear, cameraFar);
+
+  glm::mat4 mvp = projection * view * model;
+  GLuint mvpId = glGetUniformLocation(programID, "mvp");
 
   do {
     glClear(GL_COLOR_BUFFER_BIT);
 
     glUseProgram(programID);
+    glUniformMatrix4fv(mvpId, 1, GL_FALSE, &mvp[0][0]);
 
     // Draw data
     glEnableVertexAttribArray(0);
