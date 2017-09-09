@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "Camera.hpp"
 #include "Shader.hpp"
 
 int main(int argc, char *argv[]) {
@@ -72,16 +73,18 @@ int main(int argc, char *argv[]) {
   glm::mat4 model = glm::mat4(1.0f);
 
   // View matrix for transformation from world space to camera (or eye) space
-  glm::vec3 camera = glm::vec3(4.0f, 3.0f, 3.0f);
-  glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-  glm::mat4 view = glm::lookAt(camera, glm::vec3(0.0f), up);
+  Camera camera;
+  camera.setPosition(glm::vec3(4.0f, 3.0f, 3.0f));
+  camera.setLookingAt(glm::vec3(0.0f));
+  camera.setUp(glm::vec3(0.0f, 1.0f, 0.0f));
+  glm::mat4 view = camera.viewMatrix();
 
   // Projection matrix for transformation from camera space to projective space
-  GLfloat fieldOfView = glm::radians(45.0f);
-  GLfloat aspectRatio = windowWidth / windowHeight;
-  GLfloat cameraNear = 0.1f;
-  GLfloat cameraFar = 100.0f;
-  glm::mat4 projection = glm::perspective(fieldOfView, aspectRatio, cameraNear, cameraFar);
+  camera.setFoV(glm::radians(45.0f));
+  camera.setAspectRatio(windowWidth / windowHeight);
+  camera.setNear(0.1f);
+  camera.setFar(100.0f);
+  glm::mat4 projection = camera.projectionMatrix();
 
   glm::mat4 mvp = projection * view * model;
   GLuint mvpId = glGetUniformLocation(programID, "mvp");
