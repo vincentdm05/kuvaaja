@@ -46,6 +46,9 @@ int main(int argc, char *argv[]) {
   // Set background color
   glClearColor(0.2f, 0.0f, 0.1f, 0.0f);
 
+  glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LESS);
+
   // Create VAO
   GLuint VertexArrayID;
   glGenVertexArrays(1, &VertexArrayID);
@@ -90,7 +93,7 @@ int main(int argc, char *argv[]) {
   GLuint mvpId = glGetUniformLocation(programID, "mvp");
 
   do {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(programID);
     glUniformMatrix4fv(mvpId, 1, GL_FALSE, &mvp[0][0]);
