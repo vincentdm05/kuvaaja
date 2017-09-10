@@ -52,12 +52,12 @@ int main(int argc, char *argv[]) {
   glBindVertexArray(VertexArrayID);
 
   // Test data
-  const GLuint nVertices = 3;
   static const GLfloat triangle_data[] = {
     -1.0f, -1.0f, 0.0f,
     1.0f, -1.0f, 0.0f,
-    0.0f,  1.0f, 0.0f,
+    0.0f,  1.0f, 0.0f
   };
+  const GLuint nVertices = sizeof(triangle_data) / (3 * sizeof(GLfloat));
 
   // Create VBO
   GLuint vertexbuffer;
@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
     // Draw data
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-    glVertexAttribPointer(0, nVertices, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
     glDrawArrays(GL_TRIANGLES, 0, nVertices);
     glDisableVertexAttribArray(0);
 
