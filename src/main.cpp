@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
 
   // Projection matrix for transformation from camera space to projective space
   camera.setFoV(glm::radians(45.0f));
-  camera.setAspectRatio(windowWidth / windowHeight);
+  camera.setAspectRatio((GLfloat) windowWidth / windowHeight);
   camera.setNear(0.1f);
   camera.setFar(100.0f);
   glm::mat4 projection = camera.projectionMatrix();
