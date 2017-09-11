@@ -56,9 +56,42 @@ int main(int argc, char *argv[]) {
 
   // Test data
   static const GLfloat triangleData[] = {
-    -1.0f, -1.0f, 0.0f,
-    1.0f, -1.0f, 0.0f,
-    0.0f,  1.0f, 0.0f
+    -1.0f, -1.0f, -1.0f,
+    -1.0f, -1.0f, 1.0f,
+    -1.0f, 1.0f, 1.0f,
+    1.0f, 1.0f, -1.0f,
+    -1.0f, -1.0f, -1.0f,
+    -1.0f, 1.0f, -1.0f,
+    1.0f, -1.0f, 1.0f,
+    -1.0f, -1.0f, -1.0f,
+    1.0f, -1.0f, -1.0f,
+    1.0f, 1.0f, -1.0f,
+    1.0f, -1.0f, -1.0f,
+    -1.0f, -1.0f, -1.0f,
+    -1.0f, -1.0f, -1.0f,
+    -1.0f, 1.0f, 1.0f,
+    -1.0f, 1.0f, -1.0f,
+    1.0f, -1.0f, 1.0f,
+    -1.0f, -1.0f, 1.0f,
+    -1.0f, -1.0f, -1.0f,
+    -1.0f, 1.0f, 1.0f,
+    -1.0f, -1.0f, 1.0f,
+    1.0f, -1.0f, 1.0f,
+    1.0f, 1.0f, 1.0f,
+    1.0f, -1.0f, -1.0f,
+    1.0f, 1.0f, -1.0f,
+    1.0f, -1.0f, -1.0f,
+    1.0f, 1.0f, 1.0f,
+    1.0f, -1.0f, 1.0f,
+    1.0f, 1.0f, 1.0f,
+    1.0f, 1.0f, -1.0f,
+    -1.0f, 1.0f, -1.0f,
+    1.0f, 1.0f, 1.0f,
+    -1.0f, 1.0f, -1.0f,
+    -1.0f, 1.0f, 1.0f,
+    1.0f, 1.0f, 1.0f,
+    -1.0f, 1.0f, 1.0f,
+    1.0f, -1.0f, 1.0f
   };
   const GLuint nVertices = sizeof(triangleData) / (3 * sizeof(GLfloat));
 
@@ -67,6 +100,19 @@ int main(int argc, char *argv[]) {
   glGenBuffers(1, &vertexBuffer);
   glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
   glBufferData(GL_ARRAY_BUFFER, sizeof(triangleData), triangleData, GL_STATIC_DRAW);
+
+  // Generate vertex color data
+  static GLfloat colorData[nVertices * 3];
+  for (int i = 0; i < nVertices; i++) {
+    colorData[i * 3] = (triangleData[i * 3] + 1) / 2.0f;
+    colorData[i * 3 + 1] = (triangleData[i * 3 + 1] + 1) / 2.0f;
+    colorData[i * 3 + 2] = (triangleData[i * 3 + 2] + 1) / 2.0f;
+  }
+
+  GLuint colorBuffer;
+  glGenBuffers(1, &colorBuffer);
+  glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(colorData), colorData, GL_STATIC_DRAW);
 
   // Load, compile and bind shaders
   std::string shaderFolder = "shaders/";
@@ -92,6 +138,7 @@ int main(int argc, char *argv[]) {
   glm::mat4 mvp = projection * view * model;
   GLuint mvpId = glGetUniformLocation(programID, "mvp");
 
+  // Render loop
   do {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -102,6 +149,11 @@ int main(int argc, char *argv[]) {
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+    glEnableVertexAttribArray(1);
+    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
     glDrawArrays(GL_TRIANGLES, 0, nVertices);
     glDisableVertexAttribArray(0);
 
