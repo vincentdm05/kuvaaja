@@ -15,7 +15,7 @@ void Scene::deleteAllRenderables() {
   mRenderables.clear();
 }
 
-void Scene::render() {
+void Scene::render() const {
   glm::mat4 viewProjectionMatrix = mCamera->projectionMatrix() * mCamera->viewMatrix();
 
   for (Renderable *r : mRenderables) {

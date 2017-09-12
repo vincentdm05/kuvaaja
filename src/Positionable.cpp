@@ -8,7 +8,3 @@ Positionable::Positionable() :
 void Positionable::translate(const glm::vec3 &direction) {
   mTransform = glm::translate(mTransform, direction);
 }
-
-glm::mat4 Positionable::transform() const {
-  return mTransform;
-}

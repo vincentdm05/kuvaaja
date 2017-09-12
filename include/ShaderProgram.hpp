@@ -15,8 +15,8 @@ public:
   bool load(const char *vertexShaderPath, const char *fragmentShaderPath);
   void setUniform(Uniform uniform);
 
-  GLuint name() { return mProgramName; }
-  GLuint mvpLocation() { return mMvpLocation; }
+  GLuint name() const { return mProgramName; }
+  GLuint mvpLocation() const { return mMvpLocation; }
 
 private:
   GLuint mProgramName;

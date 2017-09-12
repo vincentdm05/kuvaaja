@@ -10,7 +10,7 @@ public:
 
 protected:
   void translate(const glm::vec3 &direction);
-  glm::mat4 transform() const;
+  glm::mat4 transform() const { return mTransform; }
 
 private:
   glm::mat4 mTransform;

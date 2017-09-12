@@ -17,13 +17,13 @@ public:
   void setColorData(const GLfloat *data, unsigned int pointCount);
   void setProgram(ShaderProgram *shaderProgram) { mShaderProgram = shaderProgram; }
 
-  void useProgram();
-  void render();
+  void useProgram() const;
+  void render() const;
 
   void translate(glm::vec3 direction) { Positionable::translate(direction); }
 
   glm::mat4 modelMatrix() const { return transform(); }
-  ShaderProgram *shaderProgram() { return mShaderProgram; }
+  ShaderProgram *shaderProgram() const { return mShaderProgram; }
 
 private:
   // VAO

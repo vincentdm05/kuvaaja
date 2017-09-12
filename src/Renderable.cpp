@@ -43,12 +43,12 @@ void Renderable::setColorData(const GLfloat *data, unsigned int pointCount) {
   glBindVertexArray(0);
 }
 
-void Renderable::useProgram() {
+void Renderable::useProgram() const {
   assert(mShaderProgram);
   glUseProgram(mShaderProgram->name());
 }
 
-void Renderable::render() {
+void Renderable::render() const {
   glBindVertexArray(mVertexArrayName);
 
   // Draw data

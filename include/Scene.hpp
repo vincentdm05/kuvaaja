@@ -15,7 +15,7 @@ public:
   void addRenderable(Renderable *renderable) { mRenderables.push_back(renderable); }
   void deleteAllRenderables();
 
-  void render();
+  void render() const;
 
 private:
   Camera *mCamera;
