@@ -8,7 +8,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Camera.hpp"
-#include "Shader.hpp"
+#include "Renderable.hpp"
+#include "Scene.hpp"
+#include "ShaderProgram.hpp"
 
 int main(int argc, char *argv[]) {
   if (!glfwInit()) {
@@ -49,13 +51,12 @@ int main(int argc, char *argv[]) {
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
 
-  // Create VAO
-  GLuint VertexArrayID;
-  glGenVertexArrays(1, &VertexArrayID);
-  glBindVertexArray(VertexArrayID);
+  Scene scene;
+  Renderable *cubeRenderable = new Renderable();
+  scene.addRenderable(cubeRenderable);
 
   // Test data
-  static const GLfloat triangleData[] = {
+  static GLfloat cubeTriangleData[] = {
     -1.0f, -1.0f, -1.0f,
     -1.0f, -1.0f, 1.0f,
     -1.0f, 1.0f, 1.0f,
@@ -93,75 +94,73 @@ int main(int argc, char *argv[]) {
     -1.0f, 1.0f, 1.0f,
     1.0f, -1.0f, 1.0f
   };
-  const GLuint nVertices = sizeof(triangleData) / (3 * sizeof(GLfloat));
-
-  // Create VBO
-  GLuint vertexBuffer;
-  glGenBuffers(1, &vertexBuffer);
-  glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(triangleData), triangleData, GL_STATIC_DRAW);
+  const GLuint nCubeVertices = sizeof(cubeTriangleData) / (3 * sizeof(GLfloat));
+  cubeRenderable->setVertexData(cubeTriangleData, nCubeVertices);
 
   // Generate vertex color data
-  static GLfloat colorData[nVertices * 3];
-  for (int i = 0; i < nVertices; i++) {
-    colorData[i * 3] = (triangleData[i * 3] + 1) / 2.0f;
-    colorData[i * 3 + 1] = (triangleData[i * 3 + 1] + 1) / 2.0f;
-    colorData[i * 3 + 2] = (triangleData[i * 3 + 2] + 1) / 2.0f;
+  static GLfloat cubeColorData[nCubeVertices * 3];
+  for (int i = 0; i < nCubeVertices; i++) {
+    cubeColorData[i * 3] = (cubeTriangleData[i * 3] + 1) / 2.0f;
+    cubeColorData[i * 3 + 1] = (cubeTriangleData[i * 3 + 1] + 1) / 2.0f;
+    cubeColorData[i * 3 + 2] = (cubeTriangleData[i * 3 + 2] + 1) / 2.0f;
   }
+  cubeRenderable->setColorData(cubeColorData, nCubeVertices);
+  cubeRenderable->translate(glm::vec3(1.0f, 0.0f, -1.0f));
 
-  GLuint colorBuffer;
-  glGenBuffers(1, &colorBuffer);
-  glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(colorData), colorData, GL_STATIC_DRAW);
+  // Single triangle
+  Renderable *triangleRenderable = new Renderable();
+  scene.addRenderable(triangleRenderable);
 
-  // Load, compile and bind shaders
+  static GLfloat triangleData[] = {
+    -1.0f, -1.0f, 0.0f,
+    1.0f, -1.0f, 0.0f,
+    0.0f, 1.0f, 0.0f
+  };
+  const GLuint nTriangleVertices = sizeof(triangleData) / (3 * sizeof(GLfloat));
+  triangleRenderable->setVertexData(triangleData, nTriangleVertices);
+
+  static GLfloat triangleColorData[] = {
+    1.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, 0.0f,
+    0.0f, 0.0f, 1.0f
+  };
+  triangleRenderable->setColorData(triangleColorData, nTriangleVertices);
+  triangleRenderable->translate(glm::vec3(-1.0f, 0.0f, 1.0f));
+
+  // Create shaders
   std::string shaderFolder = "shaders/";
-  GLuint programID = shader::load((shaderFolder + "vertex.glsl").c_str(), (shaderFolder + "fragment.glsl").c_str());
+  ShaderProgram *shaderProgram = new ShaderProgram();
+  shaderProgram->load((shaderFolder + "vertex.glsl").c_str(), (shaderFolder + "fragment.glsl").c_str());
+  cubeRenderable->setProgram(shaderProgram);
+  triangleRenderable->setProgram(shaderProgram);
+  shaderProgram->setUniform(Uniform::MVP);
 
-  // Model matrix for transformation from object space to world space
-  glm::mat4 model = glm::mat4(1.0f);
-
-  // View matrix for transformation from world space to camera (or eye) space
-  Camera camera;
-  camera.setPosition(glm::vec3(4.0f, 3.0f, 3.0f));
-  camera.setLookingAt(glm::vec3(0.0f));
-  camera.setUp(glm::vec3(0.0f, 1.0f, 0.0f));
-  glm::mat4 view = camera.viewMatrix();
-
-  // Projection matrix for transformation from camera space to projective space
-  camera.setFoV(glm::radians(45.0f));
-  camera.setAspectRatio((GLfloat) windowWidth / windowHeight);
-  camera.setNear(0.1f);
-  camera.setFar(100.0f);
-  glm::mat4 projection = camera.projectionMatrix();
-
-  glm::mat4 mvp = projection * view * model;
-  GLuint mvpId = glGetUniformLocation(programID, "mvp");
+  // Setup camera
+  Camera *camera = new Camera();
+  camera->setPosition(glm::vec3(4.0f, 3.0f, 3.0f));
+  camera->setLookingAt(glm::vec3(0.0f));
+  camera->setUp(glm::vec3(0.0f, 1.0f, 0.0f));
+  camera->setFoV(glm::radians(45.0f));
+  camera->setAspectRatio((GLfloat) windowWidth / windowHeight);
+  camera->setNear(0.1f);
+  camera->setFar(100.0f);
+  scene.setCamera(camera);
 
   // Render loop
   do {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glUseProgram(programID);
-    glUniformMatrix4fv(mvpId, 1, GL_FALSE, &mvp[0][0]);
-
-    // Draw data
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-    glEnableVertexAttribArray(1);
-    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-    glDrawArrays(GL_TRIANGLES, 0, nVertices);
-    glDisableVertexAttribArray(0);
+    scene.render();
 
     glfwSwapBuffers(window);
     glfwPollEvents();
 
   } while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
            glfwWindowShouldClose(window) == 0);
+
+  delete shaderProgram;
+  delete camera;
+  scene.deleteAllRenderables();
 
   glfwTerminate();
 

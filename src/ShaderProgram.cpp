@@ -1,16 +1,15 @@
-#ifndef SHADER_HPP
-#define SHADER_HPP
+#include "ShaderProgram.hpp"
 
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
 
-#include <GL/glew.h>
+ShaderProgram::ShaderProgram() :
+  mProgramName(0),
+  mMvpLocation(0) {}
 
-namespace shader {
-
-GLuint load(const char* vertexShaderPath, const char* fragmentShaderPath) {
+bool ShaderProgram::load(const char* vertexShaderPath, const char* fragmentShaderPath) {
   GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
   GLuint fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -24,7 +23,7 @@ GLuint load(const char* vertexShaderPath, const char* fragmentShaderPath) {
     vertexShaderStream.close();
   } else {
     printf("Impossible to open vertex shader at \"%s\".\n", vertexShaderPath);
-    return 0;
+    return false;
   }
 
   // Read the Fragment Shader code from the file
@@ -37,7 +36,7 @@ GLuint load(const char* vertexShaderPath, const char* fragmentShaderPath) {
     fragmentShaderStream.close();
   } else {
     printf("Impossible to open fragment shader at \"%s\".\n", fragmentShaderPath);
-    return 0;
+    return false;
   }
 
   GLint result = GL_FALSE;
@@ -80,30 +79,33 @@ GLuint load(const char* vertexShaderPath, const char* fragmentShaderPath) {
 
   // Link the program
   printf("Linking program\n");
-  GLuint programID = glCreateProgram();
-  glAttachShader(programID, vertexShaderID);
-  glAttachShader(programID, fragmentShaderID);
-  glLinkProgram(programID);
+  mProgramName = glCreateProgram();
+  glAttachShader(mProgramName, vertexShaderID);
+  glAttachShader(mProgramName, fragmentShaderID);
+  glLinkProgram(mProgramName);
 
   // Check the program
-  glGetProgramiv(programID, GL_LINK_STATUS, &result);
-  glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &infoLogLength);
+  glGetProgramiv(mProgramName, GL_LINK_STATUS, &result);
+  glGetProgramiv(mProgramName, GL_INFO_LOG_LENGTH, &infoLogLength);
   if (infoLogLength > 0) {
     std::vector<char> programErrorMessage(infoLogLength + 1);
-    glGetProgramInfoLog(programID, infoLogLength, NULL, &programErrorMessage[0]);
+    glGetProgramInfoLog(mProgramName, infoLogLength, NULL, &programErrorMessage[0]);
     printf("%s\n", &programErrorMessage[0]);
   }
 
-
-  glDetachShader(programID, vertexShaderID);
-  glDetachShader(programID, fragmentShaderID);
+  glDetachShader(mProgramName, vertexShaderID);
+  glDetachShader(mProgramName, fragmentShaderID);
 
   glDeleteShader(vertexShaderID);
   glDeleteShader(fragmentShaderID);
 
-  return programID;
+  return true;
 }
 
-} // namespace shader
-
-#endif // SHADER_HPP
+void ShaderProgram::setUniform(Uniform uniform) {
+  switch (uniform) {
+  case MVP:
+    mMvpLocation = glGetUniformLocation(mProgramName, "mvp");
+    break;
+  }
+}
