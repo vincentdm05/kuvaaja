@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
     cubeColorData[i * 3 + 2] = (cubeTriangleData[i * 3 + 2] + 1) / 2.0f;
   }
   cubeRenderable->setColorData(cubeColorData, nCubeVertices);
-  cubeRenderable->translate(glm::vec3(1.0f, 0.0f, -1.0f));
+  cubeRenderable->translate(glm::vec3(0.5f, 0.0f, -1.0f));
 
   // Single triangle
   Renderable *triangleRenderable = new Renderable();
