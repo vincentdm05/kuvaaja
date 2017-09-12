@@ -12,6 +12,8 @@ Renderable::Renderable() :
 }
 
 Renderable::~Renderable() {
+  glDeleteBuffers(1, &mVertexBufferName);
+  glDeleteBuffers(1, &mColorBufferName);
   glDeleteVertexArrays(1, &mVertexArrayName);
 }
 

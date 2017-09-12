@@ -10,6 +10,10 @@ ShaderProgram::ShaderProgram() :
   mFragmentShaderName(0),
   mMvpLocation(0) {}
 
+ShaderProgram::~ShaderProgram() {
+  glDeleteProgram(mProgramName);
+}
+
 bool ShaderProgram::setShader(const std::string &shaderPath, ShaderType shaderType) {
   GLuint &shaderName = shaderType == ST_VERTEX ? mVertexShaderName : mFragmentShaderName;
   shaderName = glCreateShader(shaderType);

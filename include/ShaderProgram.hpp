@@ -17,7 +17,7 @@ enum Uniform {
 class ShaderProgram {
 public:
   ShaderProgram();
-  ~ShaderProgram() {}
+  ~ShaderProgram();
 
   bool setShader(const std::string &shaderPath, ShaderType shaderType);
   bool linkShaders();
