@@ -3,6 +3,13 @@
 
 #include <GL/glew.h>
 
+#include <string>
+
+enum ShaderType {
+  ST_VERTEX = GL_VERTEX_SHADER,
+  ST_FRAGMENT = GL_FRAGMENT_SHADER
+};
+
 enum Uniform {
   MVP
 };
@@ -12,7 +19,8 @@ public:
   ShaderProgram();
   ~ShaderProgram() {}
 
-  bool load(const char *vertexShaderPath, const char *fragmentShaderPath);
+  bool setShader(const std::string &shaderPath, ShaderType shaderType);
+  bool linkShaders();
   void setUniform(Uniform uniform);
 
   GLuint name() const { return mProgramName; }
@@ -20,8 +28,12 @@ public:
 
 private:
   GLuint mProgramName;
+  GLuint mVertexShaderName;
+  GLuint mFragmentShaderName;
   // TODO: generalize uniform location mecanism
   GLuint mMvpLocation;
+
+  void releaseShader(GLuint &shaderName);
 };
 
 #endif // SHADER_PROGRAM_HPP

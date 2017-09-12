@@ -130,7 +130,9 @@ int main(int argc, char *argv[]) {
   // Create shaders
   std::string shaderFolder = "shaders/";
   ShaderProgram *shaderProgram = new ShaderProgram();
-  shaderProgram->load((shaderFolder + "vertex.glsl").c_str(), (shaderFolder + "fragment.glsl").c_str());
+  shaderProgram->setShader(shaderFolder + "vertex.glsl", ST_VERTEX);
+  shaderProgram->setShader(shaderFolder + "fragment.glsl", ST_FRAGMENT);
+  shaderProgram->linkShaders();
   cubeRenderable->setProgram(shaderProgram);
   triangleRenderable->setProgram(shaderProgram);
   shaderProgram->setUniform(Uniform::MVP);
