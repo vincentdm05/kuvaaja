@@ -5,7 +5,9 @@
 #include "ShaderProgram.hpp"
 
 Scene::Scene() :
-  mCamera(NULL) {}
+  mCamera(NULL) {
+  setupGL();
+}
 
 void Scene::deleteAllRenderables() {
   for (Renderable *r : mRenderables) {
@@ -16,6 +18,8 @@ void Scene::deleteAllRenderables() {
 }
 
 void Scene::render() const {
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
   glm::mat4 viewProjectionMatrix = mCamera->projectionMatrix() * mCamera->viewMatrix();
 
   for (Renderable *r : mRenderables) {
@@ -28,4 +32,9 @@ void Scene::render() const {
 
     r->render();
   }
+}
+
+void Scene::setupGL() const {
+  glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LESS);
 }

@@ -45,17 +45,24 @@ int main(int argc, char *argv[]) {
   // Activate keyboard input
   glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-  // Set background color
-  glClearColor(0.2f, 0.0f, 0.1f, 0.0f);
-
-  glEnable(GL_DEPTH_TEST);
-  glDepthFunc(GL_LESS);
-
   Scene scene;
+  scene.setBackgroundColor(glm::vec3(0.2f, 0.0f, 0.1f));
+
+  // Setup camera
+  Camera *camera = new Camera();
+  camera->setPosition(glm::vec3(4.0f, 3.0f, 3.0f));
+  camera->setLookingAt(glm::vec3(0.0f));
+  camera->setUp(glm::vec3(0.0f, 1.0f, 0.0f));
+  camera->setFoV(glm::radians(45.0f));
+  camera->setAspectRatio((GLfloat) windowWidth / windowHeight);
+  camera->setNear(0.1f);
+  camera->setFar(100.0f);
+  scene.setCamera(camera);
+
+  // Cube
   Renderable *cubeRenderable = new Renderable();
   scene.addRenderable(cubeRenderable);
 
-  // Test data
   static GLfloat cubeTriangleData[] = {
     -1.0f, -1.0f, -1.0f,
     -1.0f, -1.0f, 1.0f,
@@ -97,7 +104,6 @@ int main(int argc, char *argv[]) {
   const GLuint nCubeVertices = sizeof(cubeTriangleData) / (3 * sizeof(GLfloat));
   cubeRenderable->setVertexData(cubeTriangleData, nCubeVertices);
 
-  // Generate vertex color data
   static GLfloat cubeColorData[nCubeVertices * 3];
   for (int i = 0; i < nCubeVertices; i++) {
     cubeColorData[i * 3] = (cubeTriangleData[i * 3] + 1) / 2.0f;
@@ -137,21 +143,8 @@ int main(int argc, char *argv[]) {
   triangleRenderable->setProgram(shaderProgram);
   shaderProgram->setUniform(Uniform::MVP);
 
-  // Setup camera
-  Camera *camera = new Camera();
-  camera->setPosition(glm::vec3(4.0f, 3.0f, 3.0f));
-  camera->setLookingAt(glm::vec3(0.0f));
-  camera->setUp(glm::vec3(0.0f, 1.0f, 0.0f));
-  camera->setFoV(glm::radians(45.0f));
-  camera->setAspectRatio((GLfloat) windowWidth / windowHeight);
-  camera->setNear(0.1f);
-  camera->setFar(100.0f);
-  scene.setCamera(camera);
-
   // Render loop
   do {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     scene.render();
 
     glfwSwapBuffers(window);
