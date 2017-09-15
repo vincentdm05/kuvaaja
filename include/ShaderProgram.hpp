@@ -11,7 +11,8 @@ enum ShaderType {
 };
 
 enum Uniform {
-  MVP
+  MVP,
+  TEXTURE
 };
 
 class ShaderProgram {
@@ -25,6 +26,7 @@ public:
 
   GLuint name() const { return mProgramName; }
   GLuint mvpLocation() const { return mMvpLocation; }
+  GLuint textureLocation() const { return mTextureLocation; }
 
 private:
   GLuint mProgramName;
@@ -32,6 +34,7 @@ private:
   GLuint mFragmentShaderName;
   // TODO: generalize uniform location mecanism
   GLuint mMvpLocation;
+  GLuint mTextureLocation;
 
   void releaseShader(GLuint &shaderName);
 };

@@ -8,7 +8,8 @@ ShaderProgram::ShaderProgram() :
   mProgramName(0),
   mVertexShaderName(0),
   mFragmentShaderName(0),
-  mMvpLocation(0) {}
+  mMvpLocation(0),
+  mTextureLocation(0) {}
 
 ShaderProgram::~ShaderProgram() {
   glDeleteProgram(mProgramName);
@@ -83,6 +84,9 @@ void ShaderProgram::setUniform(Uniform uniform) {
   switch (uniform) {
   case MVP:
     mMvpLocation = glGetUniformLocation(mProgramName, "mvp");
+    break;
+  case TEXTURE:
+    mTextureLocation = glGetUniformLocation(mProgramName, "textureSampler");
     break;
   }
 }

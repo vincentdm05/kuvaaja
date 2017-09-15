@@ -3,6 +3,7 @@
 #include "Camera.hpp"
 #include "Renderable.hpp"
 #include "ShaderProgram.hpp"
+#include "Texture.hpp"
 
 Scene::Scene() :
   mCamera(NULL) {
@@ -25,10 +26,19 @@ void Scene::render() const {
   for (Renderable *r : mRenderables) {
     r->useProgram();
 
+    ShaderProgram *program = r->shaderProgram();
+
     // Update mvp for the shader
     glm::mat4 mvp = viewProjectionMatrix * r->modelMatrix();
-    GLuint mvpLocation = r->shaderProgram()->mvpLocation();
+    GLuint mvpLocation = program->mvpLocation();
     glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, &mvp[0][0]);
+
+    glActiveTexture(GL_TEXTURE0);
+    Texture *texture = r->texture();
+    glBindTexture(GL_TEXTURE_2D, texture->name());
+    GLuint textureLocation = program->textureLocation();
+    GLuint textureUnit = texture->unit();
+    glUniform1i(textureLocation, textureUnit);
 
     r->render();
   }

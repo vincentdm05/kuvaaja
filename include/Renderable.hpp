@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 
 class ShaderProgram;
+class Texture;
 
 class Renderable : Positionable {
 public:
@@ -15,7 +16,9 @@ public:
 
   void setVertexData(const GLfloat *data, unsigned int vertexCount) { setVaoData(data, mVertexBufferName, vertexCount, 3); mVertexCount = vertexCount; }
   void setColorData(const GLfloat *data, unsigned int pointCount) { setVaoData(data, mColorBufferName, pointCount, 3); }
+  void setUvData(const GLfloat *data, unsigned int uvCount) { setVaoData(data, mUvBufferName, uvCount, 2); }
   void setProgram(ShaderProgram *shaderProgram) { mShaderProgram = shaderProgram; }
+  void setTexture(Texture *texture) { mTexture = texture; }
 
   void useProgram() const;
   void render() const;
@@ -24,6 +27,7 @@ public:
 
   glm::mat4 modelMatrix() const { return transform(); }
   ShaderProgram *shaderProgram() const { return mShaderProgram; }
+  Texture *texture() const { return mTexture; }
 
 private:
   // VAO
@@ -31,9 +35,10 @@ private:
   // VBOs
   GLuint mVertexBufferName;
   GLuint mColorBufferName;
+  GLuint mUvBufferName;
 
-  // Shader program
   ShaderProgram *mShaderProgram;
+  Texture *mTexture;
 
   unsigned int mVertexCount;
 
