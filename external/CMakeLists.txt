@@ -5,14 +5,17 @@ add_definitions(
 
 set(GLEW_VERSION 2.1.0)
 
-### GLFW ###
-
-add_subdirectory (glfw)
-
 include_directories(
   glfw/include/GLFW/
   glew-${GLEW_VERSION}/include/
 )
+
+### GLFW ###
+set(GLFW_BUILD_EXAMPLES false)
+set(GLFW_BUILD_TESTS false)
+set(GLFW_BUILD_DOCS false)
+
+add_subdirectory(glfw)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 set(OPENGL_LIBRARY
