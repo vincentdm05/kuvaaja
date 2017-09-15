@@ -17,34 +17,6 @@ Renderable::~Renderable() {
   glDeleteVertexArrays(1, &mVertexArrayName);
 }
 
-void Renderable::setVertexData(const GLfloat *data, unsigned int vertexCount) {
-  glBindVertexArray(mVertexArrayName);
-
-  if (glIsBuffer(mVertexBufferName) == GL_TRUE)
-    glDeleteBuffers(1, &mVertexBufferName);
-
-  glGenBuffers(1, &mVertexBufferName);
-  glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferName);
-  glBufferData(GL_ARRAY_BUFFER, vertexCount * 3 * sizeof(GLfloat), data, GL_STATIC_DRAW);
-
-  mVertexCount = vertexCount;
-
-  glBindVertexArray(0);
-}
-
-void Renderable::setColorData(const GLfloat *data, unsigned int pointCount) {
-  glBindVertexArray(mVertexArrayName);
-
-  if (glIsBuffer(mColorBufferName) == GL_TRUE)
-    glDeleteBuffers(1, &mColorBufferName);
-
-  glGenBuffers(1, &mColorBufferName);
-  glBindBuffer(GL_ARRAY_BUFFER, mColorBufferName);
-  glBufferData(GL_ARRAY_BUFFER, pointCount * 3 * sizeof(GLfloat), data, GL_STATIC_DRAW);
-
-  glBindVertexArray(0);
-}
-
 void Renderable::useProgram() const {
   assert(mShaderProgram);
   glUseProgram(mShaderProgram->name());
@@ -66,6 +38,19 @@ void Renderable::render() const {
 
   glDrawArrays(GL_TRIANGLES, 0, mVertexCount);
   glDisableVertexAttribArray(0);
+
+  glBindVertexArray(0);
+}
+
+void Renderable::setVaoData(const GLfloat *data, GLuint &bufferName, unsigned int count, unsigned int cardinality) {
+  glBindVertexArray(mVertexArrayName);
+
+  if (glIsBuffer(bufferName) == GL_TRUE)
+    glDeleteBuffers(1, &bufferName);
+
+  glGenBuffers(1, &bufferName);
+  glBindBuffer(GL_ARRAY_BUFFER, bufferName);
+  glBufferData(GL_ARRAY_BUFFER, count * cardinality * sizeof(GLfloat), data, GL_STATIC_DRAW);
 
   glBindVertexArray(0);
 }

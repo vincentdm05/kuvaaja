@@ -13,8 +13,8 @@ public:
   Renderable();
   ~Renderable();
 
-  void setVertexData(const GLfloat *data, unsigned int vertexCount);
-  void setColorData(const GLfloat *data, unsigned int pointCount);
+  void setVertexData(const GLfloat *data, unsigned int vertexCount) { setVaoData(data, mVertexBufferName, vertexCount, 3); mVertexCount = vertexCount; }
+  void setColorData(const GLfloat *data, unsigned int pointCount) { setVaoData(data, mColorBufferName, pointCount, 3); }
   void setProgram(ShaderProgram *shaderProgram) { mShaderProgram = shaderProgram; }
 
   void useProgram() const;
@@ -36,6 +36,8 @@ private:
   ShaderProgram *mShaderProgram;
 
   unsigned int mVertexCount;
+
+  void setVaoData(const GLfloat *data, GLuint &bufferName, unsigned int count, unsigned int cardinality);
 };
 
 #endif // RENDERABLE_HPP
