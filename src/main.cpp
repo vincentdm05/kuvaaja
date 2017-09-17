@@ -114,7 +114,8 @@ int main(int argc, char *argv[]) {
   cubeRenderable->setColorData(cubeColorData, nCubeVertices);
 
   Texture *texture = new Texture();
-  texture->loadTestData();
+//  texture->loadTestData();
+  texture->load("resources/images/img_test.png");
   cubeRenderable->setTexture(texture);
   static const GLfloat cubeUvData[] = {
     1.0f, 0.0f, // -1.0f, -1.0f, -1.0f,
@@ -154,16 +155,6 @@ int main(int argc, char *argv[]) {
     1.0f, 1.0f, // -1.0f, 1.0f, 1.0f,
     0.0f, 0.0f, // 1.0f, -1.0f, 1.0f
   };
-//  static GLfloat cubeUvData[nCubeVertices * 2];
-//  for (int i = 0; i < nCubeVertices; i++) {
-//    if (cubeTriangleData[i * 3 + 2] == -1.0f) {
-//      cubeUvData[i * 2] = (cubeTriangleData[i * 3] + 1) / 2.0f;
-//      cubeUvData[i * 2 + 1] = (cubeTriangleData[i * 3 + 1] + 1) / 2.0f;
-//    } else {
-//      cubeUvData[i * 2] = 1 - (cubeTriangleData[i * 3] + 1) / 2.0f;
-//      cubeUvData[i * 2 + 1] = 1 - (cubeTriangleData[i * 3 + 1] + 1) / 2.0f;
-//    }
-//  }
   cubeRenderable->setUvData(cubeUvData, nCubeVertices);
 
 //  // Single triangle

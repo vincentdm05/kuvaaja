@@ -11,6 +11,7 @@ public:
   ~Texture() {}
 
   void loadTestData();
+  void load(const std::string &path);
 
   GLuint name() const { return mTextureName; }
   GLint unit() const { return mTextureUnit; }

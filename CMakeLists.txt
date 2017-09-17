@@ -11,6 +11,7 @@ include_directories(
   external/glew-${GLEW_VERSION}/include/
   external/glfw/include/
   external/glm/
+  external/soil/src/
   include/
 )
 
@@ -18,6 +19,7 @@ set(ALL_LIBS
   ${OPENGL_LIBRARY}
   GLEW
   glfw
+  SOIL
 )
 
 # Specify output binary directory

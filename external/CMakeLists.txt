@@ -45,3 +45,7 @@ add_library( GLEW STATIC
 target_link_libraries(GLEW
   ${OPENGL_LIBRARY}
 )
+
+### SOIL ###
+
+add_subdirectory(soil)
