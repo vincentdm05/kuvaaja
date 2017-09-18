@@ -104,6 +104,7 @@ int main(int argc, char *argv[]) {
   };
   const GLuint nCubeVertices = sizeof(cubeTriangleData) / (3 * sizeof(GLfloat));
   cubeRenderable->setVertexData(cubeTriangleData, nCubeVertices);
+  cubeRenderable->scale(glm::vec3(0.75f));
 
   static GLfloat cubeColorData[nCubeVertices * 3];
   for (int i = 0; i < nCubeVertices; i++) {
@@ -157,25 +158,36 @@ int main(int argc, char *argv[]) {
   };
   cubeRenderable->setUvData(cubeUvData, nCubeVertices);
 
-//  // Single triangle
-//  Renderable *triangleRenderable = new Renderable();
-//  scene.addRenderable(triangleRenderable);
+  // Single triangle
+  Renderable *triangleRenderable = new Renderable();
+  scene.addRenderable(triangleRenderable);
 
-//  static GLfloat triangleData[] = {
-//    -1.0f, -1.0f, 0.0f,
-//    1.0f, -1.0f, 0.0f,
-//    0.0f, 1.0f, 0.0f
-//  };
-//  const GLuint nTriangleVertices = sizeof(triangleData) / (3 * sizeof(GLfloat));
-//  triangleRenderable->setVertexData(triangleData, nTriangleVertices);
+  static GLfloat triangleData[] = {
+    -1.0f, -1.0f, 0.0f,
+    1.0f, -1.0f, 0.0f,
+    0.0f, 1.0f, 0.0f
+  };
+  const GLuint nTriangleVertices = sizeof(triangleData) / (3 * sizeof(GLfloat));
+  triangleRenderable->setVertexData(triangleData, nTriangleVertices);
+  triangleRenderable->rotate(1.2, glm::vec3(0.0f, 1.0f, 0.0));
+  triangleRenderable->scale(glm::vec3(3.0f, 3.0f, 1.0f));
 
-//  static GLfloat triangleColorData[] = {
-//    1.0f, 0.0f, 0.0f,
-//    0.0f, 1.0f, 0.0f,
-//    0.0f, 0.0f, 1.0f
-//  };
-//  triangleRenderable->setColorData(triangleColorData, nTriangleVertices);
-//  triangleRenderable->translate(glm::vec3(-1.0f, 0.0f, 1.0f));
+  static GLfloat triangleColorData[] = {
+    1.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, 0.0f,
+    0.0f, 0.0f, 1.0f
+  };
+  triangleRenderable->setColorData(triangleColorData, nTriangleVertices);
+
+  static GLfloat triangleUvData[] = {
+    0.0f, 0.0f,
+    1.0f, 0.0f,
+    0.5f, 1.0f
+  };
+  triangleRenderable->setUvData(triangleUvData, nTriangleVertices);
+  Texture *triangleTexture = new Texture();
+  triangleTexture->loadTestData();
+  triangleRenderable->setTexture(triangleTexture);
 
   // Create shaders
   std::string shaderFolder = "shaders/";
@@ -183,14 +195,23 @@ int main(int argc, char *argv[]) {
   shaderProgram->setShader(shaderFolder + "vertex.glsl", ST_VERTEX);
   shaderProgram->setShader(shaderFolder + "fragment.glsl", ST_FRAGMENT);
   shaderProgram->linkShaders();
-  cubeRenderable->setProgram(shaderProgram);
-//  triangleRenderable->setProgram(shaderProgram);
   shaderProgram->setUniform(Uniform::MVP);
   shaderProgram->setUniform(Uniform::TEXTURE);
 
+  cubeRenderable->setProgram(shaderProgram);
+  triangleRenderable->setProgram(shaderProgram);
+
   // Render loop
+  double time = glfwGetTime();
+  double lastTime = time;
   do {
     scene.render();
+
+    time = glfwGetTime();
+    double deltaTime = (time - lastTime);
+    cubeRenderable->rotate(deltaTime, glm::vec3(1.0f, 1.0f, 0.0f));
+    triangleRenderable->rotate(deltaTime, glm::vec3(0.0f, 1.0f, 0.0f));
+    lastTime = time;
 
     glfwSwapBuffers(window);
     glfwPollEvents();
@@ -200,6 +221,7 @@ int main(int argc, char *argv[]) {
 
   delete texture;
   delete shaderProgram;
+  delete triangleTexture;
   delete camera;
   scene.deleteAllRenderables();
 

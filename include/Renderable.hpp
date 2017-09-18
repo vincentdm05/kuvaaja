@@ -9,7 +9,7 @@
 class ShaderProgram;
 class Texture;
 
-class Renderable : Positionable {
+class Renderable : public Positionable {
 public:
   Renderable();
   ~Renderable();
@@ -23,9 +23,7 @@ public:
   void useProgram() const;
   void render() const;
 
-  void translate(glm::vec3 direction) { Positionable::translate(direction); }
-
-  glm::mat4 modelMatrix() const { return transform(); }
+  glm::mat4 modelMatrix() { return transform(); }
   ShaderProgram *shaderProgram() const { return mShaderProgram; }
   Texture *texture() const { return mTexture; }
 

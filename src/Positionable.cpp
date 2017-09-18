@@ -1,10 +1,18 @@
 #include "Positionable.hpp"
 
-#include <glm/gtc/matrix_transform.hpp>
-
 Positionable::Positionable() :
-  mTransform(glm::mat4(1.0f)) {}
+  mIsTransformDirty(false),
+  mTransform(glm::mat4(1.0f)),
+  mScaling(glm::mat4(1.0f)),
+  mRotation(glm::mat4(1.0f)),
+  mTranslation(glm::mat4(1.0f)) {}
 
-void Positionable::translate(const glm::vec3 &direction) {
-  mTransform = glm::translate(mTransform, direction);
+const glm::mat4 &Positionable::transform() {
+  if (mIsTransformDirty) {
+    mTransform = mTranslation * mRotation * mScaling;
+
+    mIsTransformDirty = false;
+  }
+
+  return mTransform;
 }
