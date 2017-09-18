@@ -2,13 +2,11 @@
 
 #include <SOIL.h>
 
-GLuint Texture::cTextureUnits = 0;
-
 Texture::Texture() :
   mTextureName(0),
   mWidth(0),
   mHeight(0) {
-  mTextureUnit = cTextureUnits++;
+  glGenTextures(1, &mTextureName);
 }
 
 void Texture::loadTestData() {
@@ -18,7 +16,6 @@ void Texture::loadTestData() {
                          0xFFFFFFFF, 0xFFFFFFFF, 0xFF, 0xFF};
   mWidth = mHeight = 4;
 
-  glGenTextures(1, &mTextureName);
   glBindTexture(GL_TEXTURE_2D, mTextureName);
 
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, data);
@@ -32,7 +29,6 @@ void Texture::loadTestData() {
 }
 
 void Texture::load(const std::string &path) {
-  glGenTextures(1, &mTextureName);
   glBindTexture(GL_TEXTURE_2D, mTextureName);
 
   int channels;

@@ -27,6 +27,7 @@ public:
   GLuint name() const { return mProgramName; }
   GLuint mvpLocation() const { return mMvpLocation; }
   GLuint textureLocation() const { return mTextureLocation; }
+  GLuint textureUnit() const { return mTextureUnit; }
 
 private:
   GLuint mProgramName;
@@ -35,6 +36,9 @@ private:
   // TODO: generalize uniform location mecanism
   GLuint mMvpLocation;
   GLuint mTextureLocation;
+
+  static GLuint cTextureUnits;
+  GLuint mTextureUnit;
 
   void releaseShader(GLuint &shaderName);
 };

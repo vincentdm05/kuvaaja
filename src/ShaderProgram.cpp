@@ -4,12 +4,16 @@
 #include <iostream>
 #include <vector>
 
+GLuint ShaderProgram::cTextureUnits = 0;
+
 ShaderProgram::ShaderProgram() :
   mProgramName(0),
   mVertexShaderName(0),
   mFragmentShaderName(0),
   mMvpLocation(0),
-  mTextureLocation(0) {}
+  mTextureLocation(0) {
+  mTextureUnit = cTextureUnits++;
+}
 
 ShaderProgram::~ShaderProgram() {
   glDeleteProgram(mProgramName);

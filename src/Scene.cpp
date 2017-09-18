@@ -33,11 +33,11 @@ void Scene::render() const {
     GLuint mvpLocation = program->mvpLocation();
     glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, &mvp[0][0]);
 
-    glActiveTexture(GL_TEXTURE0);
     Texture *texture = r->texture();
-    glBindTexture(GL_TEXTURE_2D, texture->name());
+    GLuint textureUnit = program->textureUnit();
     GLuint textureLocation = program->textureLocation();
-    GLuint textureUnit = texture->unit();
+    glActiveTexture(textureUnit);
+    glBindTexture(GL_TEXTURE_2D, texture->name());
     glUniform1i(textureLocation, textureUnit);
 
     r->render();

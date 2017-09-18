@@ -14,12 +14,9 @@ public:
   void load(const std::string &path);
 
   GLuint name() const { return mTextureName; }
-  GLint unit() const { return mTextureUnit; }
 
 private:
   GLuint mTextureName;
-  static GLuint cTextureUnits;
-  GLuint mTextureUnit;
 
   GLuint mWidth;
   GLuint mHeight;
