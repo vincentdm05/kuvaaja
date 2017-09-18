@@ -27,6 +27,8 @@ void Scene::render() const {
     r->useProgram();
 
     ShaderProgram *program = r->shaderProgram();
+    if (!program)
+      continue;
 
     // Update mvp for the shader
     glm::mat4 mvp = viewProjectionMatrix * r->modelMatrix();
@@ -34,11 +36,13 @@ void Scene::render() const {
     glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, &mvp[0][0]);
 
     Texture *texture = r->texture();
-    GLuint textureUnit = program->textureUnit();
-    GLuint textureLocation = program->textureLocation();
-    glActiveTexture(textureUnit);
-    glBindTexture(GL_TEXTURE_2D, texture->name());
-    glUniform1i(textureLocation, textureUnit);
+    if (texture) {
+      GLuint textureUnit = program->textureUnit();
+      GLuint textureLocation = program->textureLocation();
+      glActiveTexture(textureUnit);
+      glBindTexture(GL_TEXTURE_2D, texture->name());
+      glUniform1i(textureLocation, textureUnit);
+    }
 
     r->render();
   }
