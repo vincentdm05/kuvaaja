@@ -14,9 +14,9 @@ public:
   Renderable();
   ~Renderable();
 
-  void setVertexData(const GLfloat *data, unsigned int vertexCount) { setVaoData(data, mVertexBufferName, vertexCount, 3); mVertexCount = vertexCount; }
-  void setColorData(const GLfloat *data, unsigned int pointCount) { setVaoData(data, mColorBufferName, pointCount, 3); }
-  void setUvData(const GLfloat *data, unsigned int uvCount) { setVaoData(data, mUvBufferName, uvCount, 2); }
+  void setVertexData(const float *data, unsigned int vertexCount) { setVaoData(data, mVertexBufferName, vertexCount, 3); mVertexCount = vertexCount; }
+  void setColorData(const float *data, unsigned int pointCount) { setVaoData(data, mColorBufferName, pointCount, 3); }
+  void setUvData(const float *data, unsigned int uvCount) { setVaoData(data, mUvBufferName, uvCount, 2); }
   void setProgram(ShaderProgram *shaderProgram) { mShaderProgram = shaderProgram; }
   void setTexture(Texture *texture) { mTexture = texture; }
 

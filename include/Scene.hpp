@@ -2,7 +2,6 @@
 #define SCENE_HPP
 
 #include <GL/Glew.h>
-#include <glm/glm.hpp>
 
 #include <vector>
 
@@ -14,7 +13,7 @@ public:
   Scene();
   ~Scene() {}
 
-  void setBackgroundColor(const glm::vec3 &color) { glClearColor(color.x, color.y, color.z, 1.0); }
+  void setBackgroundColor(float r, float g, float b) { glClearColor(r, g, b, 1.0); }
   void setCamera(Camera *camera) { mCamera = camera; }
   void addRenderable(Renderable *renderable) { mRenderables.push_back(renderable); }
   void deleteAllRenderables();

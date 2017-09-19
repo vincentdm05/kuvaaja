@@ -1,6 +1,3 @@
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
 #include "Camera.hpp"
 #include "Context.hpp"
 #include "Renderable.hpp"
@@ -21,16 +18,16 @@ int main(int argc, char *argv[]) {
   }
 
   Scene *scene = new Scene();
-  scene->setBackgroundColor(glm::vec3(0.2f, 0.0f, 0.1f));
+  scene->setBackgroundColor(0.2f, 0.0f, 0.1f);
   context->setScene(scene);
 
   // Setup camera
   Camera *camera = new Camera();
-  camera->setPosition(glm::vec3(4.0f, 3.0f, 3.0f));
-  camera->setLookingAt(glm::vec3(0.0f));
-  camera->setUp(glm::vec3(0.0f, 1.0f, 0.0f));
-  camera->setFoV(glm::radians(45.0f));
-  camera->setAspectRatio((GLfloat) context->windowWidth() / context->windowHeight());
+  camera->setPosition(4.0f, 3.0f, 3.0f);
+  camera->setLookingAt(0.0f, 0.0f, 0.0f);
+  camera->setUp(0.0f, 1.0f, 0.0f);
+  camera->setFoV(45.0f);
+  camera->setAspectRatio((float) context->windowWidth() / context->windowHeight());
   camera->setNear(0.1f);
   camera->setFar(100.0f);
   scene->setCamera(camera);
@@ -39,7 +36,7 @@ int main(int argc, char *argv[]) {
   Renderable *cubeRenderable = new Renderable();
   scene->addRenderable(cubeRenderable);
 
-  static GLfloat cubeTriangleData[] = {
+  static float cubeTriangleData[] = {
     -1.0f, -1.0f, -1.0f,
     -1.0f, -1.0f, 1.0f,
     -1.0f, 1.0f, 1.0f,
@@ -77,11 +74,11 @@ int main(int argc, char *argv[]) {
     -1.0f, 1.0f, 1.0f,
     1.0f, -1.0f, 1.0f
   };
-  const GLuint nCubeVertices = sizeof(cubeTriangleData) / (3 * sizeof(GLfloat));
+  const unsigned int nCubeVertices = sizeof(cubeTriangleData) / (3 * sizeof(float));
   cubeRenderable->setVertexData(cubeTriangleData, nCubeVertices);
-  cubeRenderable->scale(glm::vec3(0.75f));
+  cubeRenderable->scale(0.75f, 0.75f, 0.75f);
 
-  static GLfloat cubeColorData[nCubeVertices * 3];
+  static float cubeColorData[nCubeVertices * 3];
   for (int i = 0; i < nCubeVertices; i++) {
     cubeColorData[i * 3] = (cubeTriangleData[i * 3] + 1) / 2.0f;
     cubeColorData[i * 3 + 1] = (cubeTriangleData[i * 3 + 1] + 1) / 2.0f;
@@ -93,7 +90,7 @@ int main(int argc, char *argv[]) {
 //  texture->loadTestData();
   texture->load("resources/images/img_test.png");
   cubeRenderable->setTexture(texture);
-  static const GLfloat cubeUvData[] = {
+  static float cubeUvData[] = {
     1.0f, 0.0f, // -1.0f, -1.0f, -1.0f,
     0.0f, 0.0f, // -1.0f, -1.0f, 1.0f,
     0.0f, 1.0f, // -1.0f, 1.0f, 1.0f,
@@ -137,24 +134,24 @@ int main(int argc, char *argv[]) {
   Renderable *triangleRenderable = new Renderable();
   scene->addRenderable(triangleRenderable);
 
-  static GLfloat triangleData[] = {
+  static float triangleData[] = {
     -1.0f, -1.0f, 0.0f,
     1.0f, -1.0f, 0.0f,
     0.0f, 1.0f, 0.0f
   };
-  const GLuint nTriangleVertices = sizeof(triangleData) / (3 * sizeof(GLfloat));
+  const unsigned int nTriangleVertices = sizeof(triangleData) / (3 * sizeof(float));
   triangleRenderable->setVertexData(triangleData, nTriangleVertices);
-  triangleRenderable->rotate(1.2, glm::vec3(0.0f, 1.0f, 0.0));
-  triangleRenderable->scale(glm::vec3(3.0f, 3.0f, 1.0f));
+  triangleRenderable->rotate(1.2f, 0.0f, 1.0f, 0.0);
+  triangleRenderable->scale(3.0f, 3.0f, 1.0f);
 
-  static GLfloat triangleColorData[] = {
+  static float triangleColorData[] = {
     1.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 1.0f
   };
   triangleRenderable->setColorData(triangleColorData, nTriangleVertices);
 
-  static GLfloat triangleUvData[] = {
+  static float triangleUvData[] = {
     0.0f, 0.0f,
     1.0f, 0.0f,
     0.5f, 1.0f
@@ -183,8 +180,8 @@ int main(int argc, char *argv[]) {
   do {
     time = context->getTime();
     deltaTime = (time - lastTime);
-    cubeRenderable->rotate(deltaTime, glm::vec3(1.0f, 1.0f, 0.0f));
-    triangleRenderable->rotate(deltaTime, glm::vec3(0.0f, 1.0f, 0.0f));
+    cubeRenderable->rotate(deltaTime, 1.0f, 1.0f, 0.0f);
+    triangleRenderable->rotate(deltaTime, 0.0f, 1.0f, 0.0f);
     lastTime = time;
 
     context->render();

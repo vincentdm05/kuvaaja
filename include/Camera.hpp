@@ -8,10 +8,10 @@ public:
   Camera();
   ~Camera() {}
 
-  void setPosition(glm::vec3 position) { mPosition = position; mIsViewDirty = true; }
-  void setLookingAt(glm::vec3 lookingAt) { mLookingAt = lookingAt; mIsViewDirty = true; }
-  void setUp(glm::vec3 up) { mUp = up; mIsViewDirty = true; }
-  void setFoV(float fieldOfView) { mFoV = fieldOfView; mIsProjectionDirty = true; }
+  void setPosition(float x, float y, float z) { mPosition = glm::vec3(x, y, z); mIsViewDirty = true; }
+  void setLookingAt(float x, float y, float z) { mLookingAt = glm::vec3(x, y, z); mIsViewDirty = true; }
+  void setUp(float x, float y, float z) { mUp = glm::vec3(x, y, z); mIsViewDirty = true; }
+  void setFoV(float fieldOfView) { mFoV = glm::radians(fieldOfView); mIsProjectionDirty = true; }
   void setAspectRatio(float aspectRatio) { mAspectRatio = aspectRatio; mIsProjectionDirty = true; }
   void setNear(float near) { mNear = near; mIsProjectionDirty = true; }
   void setFar(float far) { mFar = far; mIsProjectionDirty = true; }
