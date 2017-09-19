@@ -164,8 +164,8 @@ int main(int argc, char *argv[]) {
   // Create shaders
   std::string shaderFolder = "shaders/";
   ShaderProgram *shaderProgram = new ShaderProgram();
-  shaderProgram->setShader(shaderFolder + "vertex.glsl", ST_VERTEX);
-  shaderProgram->setShader(shaderFolder + "fragment.glsl", ST_FRAGMENT);
+  shaderProgram->setShader(shaderFolder + "vertex.glsl", ShaderType::VERTEX);
+  shaderProgram->setShader(shaderFolder + "fragment.glsl", ShaderType::FRAGMENT);
   shaderProgram->linkShaders();
   shaderProgram->setUniform(Uniform::MVP);
   shaderProgram->setUniform(Uniform::TEXTURE);

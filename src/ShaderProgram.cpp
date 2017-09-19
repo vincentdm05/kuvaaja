@@ -20,7 +20,7 @@ ShaderProgram::~ShaderProgram() {
 }
 
 bool ShaderProgram::setShader(const std::string &shaderPath, ShaderType shaderType) {
-  GLuint &shaderName = shaderType == ST_VERTEX ? mVertexShaderName : mFragmentShaderName;
+  GLuint &shaderName = shaderType == VERTEX ? mVertexShaderName : mFragmentShaderName;
   shaderName = glCreateShader(shaderType);
 
   // Read shader code from file

@@ -6,8 +6,8 @@
 #include <string>
 
 enum ShaderType {
-  ST_VERTEX = GL_VERTEX_SHADER,
-  ST_FRAGMENT = GL_FRAGMENT_SHADER
+  VERTEX = GL_VERTEX_SHADER,
+  FRAGMENT = GL_FRAGMENT_SHADER
 };
 
 enum Uniform {
