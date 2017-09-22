@@ -15,6 +15,7 @@
 
 #define SOIL_CHECK_FOR_GL_ERRORS 0
 
+#include <GL/glew.h>
 #ifdef WIN32
 	#define WIN32_LEAN_AND_MEAN
 	#include <windows.h>
@@ -103,6 +104,7 @@ unsigned int
 		unsigned int opengl_texture_target,
 		unsigned int texture_check_size_enum
 	);
+unsigned int query_OGL_extension(const char * extension);
 
 /*	and the code magic begins here [8^)	*/
 unsigned int
@@ -1876,10 +1878,7 @@ int query_NPOT_capability( void )
 	if( has_NPOT_capability == SOIL_CAPABILITY_UNKNOWN )
 	{
 		/*	we haven't yet checked for the capability, do so	*/
-		if(
-			(NULL == strstr( (char const*)glGetString( GL_EXTENSIONS ),
-				"GL_ARB_texture_non_power_of_two" ) )
-			)
+		if( query_OGL_extension( "GL_ARB_texture_non_power_of_two" ) )
 		{
 			/*	not there, flag the failure	*/
 			has_NPOT_capability = SOIL_CAPABILITY_NONE;
@@ -1900,14 +1899,11 @@ int query_tex_rectangle_capability( void )
 	{
 		/*	we haven't yet checked for the capability, do so	*/
 		if(
-			(NULL == strstr( (char const*)glGetString( GL_EXTENSIONS ),
-				"GL_ARB_texture_rectangle" ) )
+			query_OGL_extension( "GL_ARB_texture_rectangle" )
 		&&
-			(NULL == strstr( (char const*)glGetString( GL_EXTENSIONS ),
-				"GL_EXT_texture_rectangle" ) )
+			query_OGL_extension( "GL_EXT_texture_rectangle" )
 		&&
-			(NULL == strstr( (char const*)glGetString( GL_EXTENSIONS ),
-				"GL_NV_texture_rectangle" ) )
+			query_OGL_extension( "GL_NV_texture_rectangle" )
 			)
 		{
 			/*	not there, flag the failure	*/
@@ -1929,11 +1925,9 @@ int query_cubemap_capability( void )
 	{
 		/*	we haven't yet checked for the capability, do so	*/
 		if(
-			(NULL == strstr( (char const*)glGetString( GL_EXTENSIONS ),
-				"GL_ARB_texture_cube_map" ) )
+			query_OGL_extension( "GL_ARB_texture_cube_map" )
 		&&
-			(NULL == strstr( (char const*)glGetString( GL_EXTENSIONS ),
-				"GL_EXT_texture_cube_map" ) )
+			query_OGL_extension( "GL_EXT_texture_cube_map" )
 			)
 		{
 			/*	not there, flag the failure	*/
@@ -1954,9 +1948,7 @@ int query_DXT_capability( void )
 	if( has_DXT_capability == SOIL_CAPABILITY_UNKNOWN )
 	{
 		/*	we haven't yet checked for the capability, do so	*/
-		if( NULL == strstr(
-				(char const*)glGetString( GL_EXTENSIONS ),
-				"GL_EXT_texture_compression_s3tc" ) )
+		if( query_OGL_extension( "GL_EXT_texture_compression_s3tc" ) )
 		{
 			/*	not there, flag the failure	*/
 			has_DXT_capability = SOIL_CAPABILITY_NONE;
@@ -2021,4 +2013,17 @@ int query_DXT_capability( void )
 	}
 	/*	let the user know if we can do DXT or not	*/
 	return has_DXT_capability;
+}
+
+unsigned int query_OGL_extension(const char * extension) {
+	GLint n, i;
+	glGetIntegerv(GL_NUM_EXTENSIONS, &n);
+	for (i = 0; i < n; i++) {
+		if(
+			(NULL == strstr( (char const*)glGetStringi( GL_EXTENSIONS, i ),
+				extension ) )
+			)
+			return 1;
+	}
+	return 0;
 }
