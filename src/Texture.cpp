@@ -10,10 +10,10 @@ Texture::Texture() :
 }
 
 void Texture::loadTestData() {
-  const GLuint data[] = {0xFF, 0xFF0000FF, 0xFFFFFFFF, 0xFFFFFFFF,
-                         0xFFFF, 0xFF00FF, 0xFFFFFFFF, 0xFFFFFFFF,
-                         0xFFFFFFFF, 0xFFFFFFFF, 0xFF, 0xFF,
-                         0xFFFFFFFF, 0xFFFFFFFF, 0xFF, 0xFF};
+  const GLuint data[] = {0x000000FF, 0xFF0000FF, 0xFFFFFFFF, 0xFFFFFFFF,
+                         0x0000FFFF, 0x00FF00FF, 0xFFFFFFFF, 0xFFFFFFFF,
+                         0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0x000000FF,
+                         0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0x000000FF};
   mWidth = mHeight = 4;
 
   glBindTexture(GL_TEXTURE_2D, mTextureName);
