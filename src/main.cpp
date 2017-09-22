@@ -1,5 +1,6 @@
 #include "Camera.hpp"
 #include "Context.hpp"
+#include "Debug.hpp"
 #include "Renderable.hpp"
 #include "Scene.hpp"
 #include "ShaderProgram.hpp"
@@ -195,6 +196,8 @@ int main(int argc, char *argv[]) {
   scene->deleteAllRenderables();
   delete scene;
   delete context;
+
+  printOpenGlErrors();
 
   return 0;
 }
