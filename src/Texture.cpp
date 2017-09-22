@@ -29,21 +29,16 @@ void Texture::loadTestData() {
 }
 
 void Texture::load(const std::string &path) {
+  mTextureName = SOIL_load_OGL_texture(path.c_str(), SOIL_LOAD_AUTO, mTextureName,
+                                       SOIL_FLAG_MIPMAPS |
+                                       SOIL_FLAG_TEXTURE_REPEATS |
+                                       SOIL_FLAG_INVERT_Y
+                                       );
+
   glBindTexture(GL_TEXTURE_2D, mTextureName);
 
-  int channels;
-  int width, height;
-  GLubyte *data = SOIL_load_image(path.c_str(), &width, &height, &channels, SOIL_LOAD_RGBA);
-  mWidth = width;
-  mHeight = height;
-
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-  SOIL_free_image_data(data);
-
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
   glBindTexture(GL_TEXTURE_2D, 0);
 }
