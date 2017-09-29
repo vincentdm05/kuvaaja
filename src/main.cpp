@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
   Renderable *cubeRenderable = new Renderable();
   scene->addRenderable(cubeRenderable);
 
-  static float cubeTriangleData[] = {
+  const float cubeTriangleData[] = {
     -1.0f, -1.0f, -1.0f,
     -1.0f, -1.0f, 1.0f,
     -1.0f, 1.0f, 1.0f,
@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
 //  texture->loadTestData();
   texture->load("resources/images/img_test.png");
   cubeRenderable->setTexture(texture);
-  static float cubeUvData[] = {
+  const float cubeUvData[] = {
     1.0f, 0.0f, // -1.0f, -1.0f, -1.0f,
     0.0f, 0.0f, // -1.0f, -1.0f, 1.0f,
     0.0f, 1.0f, // -1.0f, 1.0f, 1.0f,
@@ -135,7 +135,7 @@ int main(int argc, char *argv[]) {
   Renderable *triangleRenderable = new Renderable();
   scene->addRenderable(triangleRenderable);
 
-  static float triangleData[] = {
+  const float triangleData[] = {
     -1.0f, -1.0f, 0.0f,
     1.0f, -1.0f, 0.0f,
     0.0f, 1.0f, 0.0f
@@ -145,14 +145,14 @@ int main(int argc, char *argv[]) {
   triangleRenderable->rotate(1.2f, 0.0f, 1.0f, 0.0);
   triangleRenderable->scale(3.0f, 3.0f, 1.0f);
 
-  static float triangleColorData[] = {
+  const float triangleColorData[] = {
     1.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 1.0f
   };
   triangleRenderable->setColorData(triangleColorData, nTriangleVertices);
 
-  static float triangleUvData[] = {
+  const float triangleUvData[] = {
     0.0f, 0.0f,
     1.0f, 0.0f,
     0.5f, 1.0f
