@@ -15,6 +15,7 @@ public:
   bool canRender() const;
 
   double getTime() const { return glfwGetTime(); }
+  void cursorPosition(double *x, double *y) const { glfwGetCursorPos(mWindow, x, y); }
 
   GLuint windowWidth() const { return mWindowWidth; }
   GLuint windowHeight() const { return mWindowHeight; }

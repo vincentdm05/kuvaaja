@@ -1,5 +1,6 @@
 #include "Camera.hpp"
 #include "Context.hpp"
+#include "Control.hpp"
 #include "Debug.hpp"
 #include "Renderable.hpp"
 #include "Scene.hpp"
@@ -174,21 +175,27 @@ int main(int argc, char *argv[]) {
   cubeRenderable->setProgram(shaderProgram);
   triangleRenderable->setProgram(shaderProgram);
 
+  Control *control = new Control();
+  control->setContext(context);
+  control->setCamera(camera);
+
   // Render loop
   double time = context->getTime();
   double lastTime = time;
   double deltaTime;
-  do {
+  while (context->canRender()) {
     time = context->getTime();
     deltaTime = (time - lastTime);
     cubeRenderable->rotate(deltaTime, 1.0f, 1.0f, 0.0f);
     triangleRenderable->rotate(deltaTime, 0.0f, 1.0f, 0.0f);
     lastTime = time;
 
+    control->updateCamera();
+
     context->render();
+  }
 
-  } while (context->canRender());
-
+  delete control;
   delete texture;
   delete shaderProgram;
   delete triangleTexture;

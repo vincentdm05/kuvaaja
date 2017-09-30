@@ -30,6 +30,8 @@ Context::Context() :
 
   // Activate keyboard input
   glfwSetInputMode(mWindow, GLFW_STICKY_KEYS, GL_TRUE);
+  // Hide and capture cursor
+  glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 Context::~Context() {
