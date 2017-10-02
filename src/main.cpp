@@ -25,9 +25,9 @@ int main(int argc, char *argv[]) {
 
   // Setup camera
   Camera *camera = new Camera();
-  camera->setPosition(4.0f, 3.0f, 3.0f);
-  camera->setLookingAt(0.0f, 0.0f, 0.0f);
-  camera->setUp(0.0f, 1.0f, 0.0f);
+  camera->setPosition(glm::vec3(4.0f, 3.0f, 3.0f));
+  camera->setDirection(glm::vec3(-1.5f, -1.0f, -1.0f));
+  camera->setUp(glm::vec3(0.0f, 1.0f, 0.0f));
   camera->setFoV(45.0f);
   camera->setAspectRatio((float) context->windowWidth() / context->windowHeight());
   camera->setNear(0.1f);
@@ -180,15 +180,11 @@ int main(int argc, char *argv[]) {
   control->setCamera(camera);
 
   // Render loop
-  double time = context->getTime();
-  double lastTime = time;
   double deltaTime;
   while (context->canRender()) {
-    time = context->getTime();
-    deltaTime = (time - lastTime);
+    deltaTime = context->loopTime();
     cubeRenderable->rotate(deltaTime, 1.0f, 1.0f, 0.0f);
-    triangleRenderable->rotate(deltaTime, 0.0f, 1.0f, 0.0f);
-    lastTime = time;
+//    triangleRenderable->rotate(deltaTime, 0.0f, 1.0f, 0.0f);
 
     control->updateCamera();
 

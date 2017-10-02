@@ -6,7 +6,8 @@ Context::Context() :
   mWindow(NULL),
   mWindowWidth(1024),
   mWindowHeight(768),
-  mScene(NULL) {
+  mScene(NULL),
+  mTimeBeforeLastRender(0.0) {
   if (!glfwInit())
     throw "Failed to initialise GLFW.";
 
@@ -32,6 +33,8 @@ Context::Context() :
   glfwSetInputMode(mWindow, GLFW_STICKY_KEYS, GL_TRUE);
   // Hide and capture cursor
   glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+  mTimeBeforeLastRender = glfwGetTime();
 }
 
 Context::~Context() {
@@ -42,9 +45,11 @@ void Context::render() {
   if (!mScene)
     return;
 
-  mScene->render();
+  mTimeBeforeLastRender = glfwGetTime();
 
+  mScene->render();
   glfwSwapBuffers(mWindow);
+
   glfwPollEvents();
 }
 

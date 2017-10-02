@@ -20,6 +20,9 @@ private:
   float mSpeed;
   double mPreviousCursorX;
   double mPreviousCursorY;
+
+  bool mCtrlPressed;
+  bool mCtrlToggled;
 };
 
 #endif // CONTROL_HPP

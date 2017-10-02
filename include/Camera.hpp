@@ -8,9 +8,9 @@ public:
   Camera();
   ~Camera() {}
 
-  void setPosition(float x, float y, float z) { mPosition = glm::vec3(x, y, z); mIsViewDirty = true; }
-  void setLookingAt(float x, float y, float z) { mDirection = glm::vec3(x, y, z) - mPosition; mIsViewDirty = true; }
-  void setUp(float x, float y, float z) { mUp = glm::vec3(x, y, z); mIsViewDirty = true; }
+  void setPosition(const glm::vec3 &position) { mPosition = position; mIsViewDirty = true; }
+  void setDirection(const glm::vec3 &direction) { mDirection = direction; mIsViewDirty = true; }
+  void setUp(const glm::vec3 &up) { mUp = up; mIsViewDirty = true; }
   void setFoV(float fieldOfView) { mFoV = glm::radians(fieldOfView); mIsProjectionDirty = true; }
   void setAspectRatio(float aspectRatio) { mAspectRatio = aspectRatio; mIsProjectionDirty = true; }
   void setNear(float near) { mNear = near; mIsProjectionDirty = true; }
@@ -18,9 +18,15 @@ public:
 
   void applyYaw(float angle);
   void applyPitch(float angle);
+  void applyRoll(float angle);
 
-  glm::mat4 viewMatrix();
-  glm::mat4 projectionMatrix();
+  glm::vec3 right();
+  const glm::vec3 &up();
+  glm::vec3 forward();
+  const glm::vec3 &position() { return mPosition; }
+
+  const glm::mat4 &viewMatrix();
+  const glm::mat4 &projectionMatrix();
 
 private:
   glm::vec3 mPosition;
@@ -36,9 +42,7 @@ private:
   glm::mat4 mProjection;
   bool mIsProjectionDirty;
 
-  glm::vec3 up();
-  glm::vec3 right();
-
+  void rebuildViewMatrix();
   void rotateView(float angle, const glm::vec3 &axis);
 };
 
