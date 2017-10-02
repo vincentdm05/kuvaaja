@@ -40,8 +40,15 @@ void Control::updateCamera() {
 
   if (mouseX != 0)
     mCamera->applyYaw(-mouseX * 180 * mSpeed);
-  if (mouseY != 0)
-    mCamera->applyPitch(-mouseY * 180 * mSpeed);
+  if (mouseY != 0) {
+    float pitchingAngle = -mouseY * 180 * mSpeed;
+    if (mCtrlToggled) {
+      float maxAngle = 90 - std::fabs(glm::degrees(std::acos(glm::dot(glm::vec3(0.0f, 1.0f, 0.0f), -mCamera->forward()))) - 90) - 10;
+      int sign = (0 < pitchingAngle) - (pitchingAngle < 0);
+      pitchingAngle = sign * std::fmin(maxAngle, std::fabs(pitchingAngle));
+    }
+    mCamera->applyPitch(pitchingAngle);
+  }
 
   // (x, z) camera plane movement
   if (mContext->keyPressed(KEY_RIGHT, KEY_D))
