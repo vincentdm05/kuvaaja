@@ -7,7 +7,7 @@
 class Positionable {
 public:
   Positionable();
-  ~Positionable() {}
+  virtual ~Positionable() {}
 
   void scale(float x, float y, float z) {
     mScaling = glm::scale(mScaling, glm::vec3(x, y, z));
