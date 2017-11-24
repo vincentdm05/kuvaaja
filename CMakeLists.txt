@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(kuvaaja)
-set (CMAKE_CXX_STANDARD 11)
 
-find_library(OpenGL REQUIRED)
+# Compile with C++11
+set (CMAKE_CXX_STANDARD 11)
 
 # Compile external libraries
 add_subdirectory(external/)
