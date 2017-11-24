@@ -2,6 +2,7 @@
 #include "Context.hpp"
 #include "Control.hpp"
 #include "Debug.hpp"
+#include "Material.hpp"
 #include "Renderable.hpp"
 #include "Scene.hpp"
 #include "ShaderProgram.hpp"
@@ -34,8 +35,24 @@ int main(int argc, char *argv[]) {
   camera->setFar(100.0f);
   scene->setCamera(camera);
 
+  // Create shaders
+  std::string shaderFolder = "shaders/";
+  ShaderProgram *shaderProgram = new ShaderProgram();
+  shaderProgram->setShader(shaderFolder + "vertex.glsl", ShaderType::VERTEX);
+  shaderProgram->setShader(shaderFolder + "fragment.glsl", ShaderType::FRAGMENT);
+  shaderProgram->linkShaders();
+  shaderProgram->setUniform(Uniform::MVP);
+  shaderProgram->setUniform(Uniform::TEXTURE);
+
+  // Create materials
+  Material *cubeMaterial = new Material();
+  cubeMaterial->setProgram(shaderProgram);
+  Material *triangleMaterial = new Material();
+  triangleMaterial->setProgram(shaderProgram);
+
   // Cube
   Renderable *cubeRenderable = new Renderable();
+  cubeRenderable->setMaterial(cubeMaterial);
   scene->addRenderable(cubeRenderable);
 
   const float cubeTriangleData[] = {
@@ -91,7 +108,7 @@ int main(int argc, char *argv[]) {
   Texture *texture = new Texture();
 //  texture->loadTestData();
   texture->load("resources/images/img_test.png");
-  cubeRenderable->setTexture(texture);
+  cubeRenderable->material()->setTexture(texture);
   const float cubeUvData[] = {
     1.0f, 0.0f, // -1.0f, -1.0f, -1.0f,
     0.0f, 0.0f, // -1.0f, -1.0f, 1.0f,
@@ -134,6 +151,7 @@ int main(int argc, char *argv[]) {
 
   // Single triangle
   Renderable *triangleRenderable = new Renderable();
+  triangleRenderable->setMaterial(triangleMaterial);
   scene->addRenderable(triangleRenderable);
 
   const float triangleData[] = {
@@ -161,20 +179,9 @@ int main(int argc, char *argv[]) {
   triangleRenderable->setUvData(triangleUvData, nTriangleVertices);
   Texture *triangleTexture = new Texture();
   triangleTexture->loadTestData();
-  triangleRenderable->setTexture(triangleTexture);
+  triangleRenderable->material()->setTexture(triangleTexture);
 
-  // Create shaders
-  std::string shaderFolder = "shaders/";
-  ShaderProgram *shaderProgram = new ShaderProgram();
-  shaderProgram->setShader(shaderFolder + "vertex.glsl", ShaderType::VERTEX);
-  shaderProgram->setShader(shaderFolder + "fragment.glsl", ShaderType::FRAGMENT);
-  shaderProgram->linkShaders();
-  shaderProgram->setUniform(Uniform::MVP);
-  shaderProgram->setUniform(Uniform::TEXTURE);
-
-  cubeRenderable->setProgram(shaderProgram);
-  triangleRenderable->setProgram(shaderProgram);
-
+  // Generic controls
   Control *control = new Control();
   control->setContext(context);
   control->setCamera(camera);
@@ -194,6 +201,8 @@ int main(int argc, char *argv[]) {
   delete control;
   delete texture;
   delete shaderProgram;
+  delete cubeMaterial;
+  delete triangleMaterial;
   delete triangleTexture;
   delete camera;
   scene->deleteAllRenderables();

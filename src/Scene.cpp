@@ -1,6 +1,7 @@
 #include "Scene.hpp"
 
 #include "Camera.hpp"
+#include "Material.hpp"
 #include "Renderable.hpp"
 #include "ShaderProgram.hpp"
 #include "Texture.hpp"
@@ -24,9 +25,9 @@ void Scene::render() const {
   glm::mat4 viewProjectionMatrix = mCamera->projectionMatrix() * mCamera->viewMatrix();
 
   for (Renderable *r : mRenderables) {
-    r->useProgram();
+    r->material()->useProgram();
 
-    ShaderProgram *program = r->shaderProgram();
+    ShaderProgram *program = r->material()->shaderProgram();
     if (!program)
       continue;
 
@@ -35,7 +36,7 @@ void Scene::render() const {
     GLuint mvpLocation = program->mvpLocation();
     glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, &mvp[0][0]);
 
-    Texture *texture = r->texture();
+    Texture *texture = r->material()->texture();
     if (texture) {
       GLuint textureUnit = program->textureUnit();
       GLuint textureLocation = program->textureLocation();

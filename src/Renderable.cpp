@@ -1,14 +1,13 @@
 #include "Renderable.hpp"
 
-#include "ShaderProgram.hpp"
+#include "Material.hpp"
 
 Renderable::Renderable() :
   mVertexArrayName(0),
   mVertexBufferName(0),
   mColorBufferName(0),
   mUvBufferName(0),
-  mShaderProgram(NULL),
-  mTexture(NULL),
+  mMaterial(NULL),
   mVertexCount(0) {
   glGenVertexArrays(1, &mVertexArrayName);
 }
@@ -18,11 +17,6 @@ Renderable::~Renderable() {
   glDeleteBuffers(1, &mColorBufferName);
   glDeleteBuffers(1, &mUvBufferName);
   glDeleteVertexArrays(1, &mVertexArrayName);
-}
-
-void Renderable::useProgram() const {
-  assert(mShaderProgram);
-  glUseProgram(mShaderProgram->name());
 }
 
 void Renderable::render() const {
