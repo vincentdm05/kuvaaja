@@ -2,6 +2,7 @@
 #include "Context.hpp"
 #include "Control.hpp"
 #include "Debug.hpp"
+#include "DirectionalLight.hpp"
 #include "Material.hpp"
 #include "Renderable.hpp"
 #include "Scene.hpp"
@@ -24,6 +25,13 @@ int main(int argc, char *argv[]) {
   scene->setBackgroundColor(0.2f, 0.0f, 0.1f);
   context->setScene(scene);
 
+  // Shine light
+  scene->setAmbientLight(1.0f, 1.0f, 1.0f, 0.2f);
+  DirectionalLight *directionalLight = new DirectionalLight();
+  directionalLight->setColor(glm::vec3(0.2f, 0.5f, 0.1f));
+  directionalLight->setDirection(glm::vec3(-0.1f, -1.0f, 0.0f));
+  scene->addDirectionalLight(directionalLight);
+
   // Setup camera
   Camera *camera = new Camera();
   camera->setPosition(glm::vec3(4.0f, 3.0f, 3.0f));
@@ -41,8 +49,12 @@ int main(int argc, char *argv[]) {
   shaderProgram->setShader(shaderFolder + "vertex.glsl", ShaderType::VERTEX);
   shaderProgram->setShader(shaderFolder + "fragment.glsl", ShaderType::FRAGMENT);
   shaderProgram->linkShaders();
+  // TODO: get rid of the need to do this from outside.
+  // Instead, keep track of what is used in the program from, e.g., the scene
   shaderProgram->setUniform(Uniform::MVP);
   shaderProgram->setUniform(Uniform::TEXTURE);
+  shaderProgram->setUniform(Uniform::AMBIENT_LIGHT);
+  shaderProgram->setUniform(Uniform::DIRECTIONAL_LIGHTS);
 
   // Create materials
   Material *cubeMaterial = new Material();
@@ -206,6 +218,7 @@ int main(int argc, char *argv[]) {
   delete triangleTexture;
   delete camera;
   scene->deleteAllRenderables();
+  scene->deleteAllLights();
   delete scene;
   delete context;
 

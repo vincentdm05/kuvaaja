@@ -12,7 +12,11 @@ enum ShaderType {
 
 enum Uniform {
   MVP,
-  TEXTURE
+  TEXTURE,
+  AMBIENT_LIGHT,
+  POINT_LIGHTS,
+  DIRECTIONAL_LIGHTS,
+  SPOT_LIGHTS
 };
 
 class ShaderProgram {
@@ -26,6 +30,10 @@ public:
 
   GLuint name() const { return mProgramName; }
   GLuint mvpLocation() const { return mMvpLocation; }
+  GLuint ambientLightLocation() const { return mAmbientLightLocation; }
+  GLuint pointLightsLocation() const { return mPointLightsLocation; }
+  GLuint directionalLightsLocation() const { return mDirectionalLightsLocation; }
+  GLuint spotLightsLocation() const { return mSpotLightsLocation; }
   GLuint textureLocation() const { return mTextureLocation; }
   GLuint textureUnit() const { return mTextureUnit; }
 
@@ -35,6 +43,10 @@ private:
   GLuint mFragmentShaderName;
   // TODO: generalize uniform location mecanism
   GLuint mMvpLocation;
+  GLuint mAmbientLightLocation;
+  GLuint mPointLightsLocation;
+  GLuint mDirectionalLightsLocation;
+  GLuint mSpotLightsLocation;
   GLuint mTextureLocation;
 
   static GLuint cTextureUnits;

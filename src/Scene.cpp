@@ -1,24 +1,38 @@
 #include "Scene.hpp"
 
 #include "Camera.hpp"
+#include "DirectionalLight.hpp"
 #include "Material.hpp"
+#include "PointLight.hpp"
 #include "Renderable.hpp"
 #include "ShaderProgram.hpp"
+#include "SpotLight.hpp"
 #include "Texture.hpp"
 
 Scene::Scene() :
-  mCamera(NULL) {
+  mCamera(NULL),
+  mAmbientLight(1.0f, 1.0f, 1.0f, 1.0f) {
   setupGL();
 }
 
-void Scene::deleteAllRenderables() {
-  for (Renderable *r : mRenderables) {
-    delete r;
-    r = NULL;
-  }
-  mRenderables.clear();
+void Scene::setAmbientLight(float r, float g, float b, float intensity) {
+  mAmbientLight[0] = r;
+  mAmbientLight[1] = g;
+  mAmbientLight[2] = b;
+  mAmbientLight[3] = intensity;
 }
 
+void Scene::deleteAllRenderables() {
+  deleteAll(mRenderables);
+}
+
+void Scene::deleteAllLights() {
+  deleteAll(mPointLights);
+  deleteAll(mDirectionalLights);
+  deleteAll(mSpotLights);
+}
+
+// This is a naive rendering method, it should be improved in the future.
 void Scene::render() const {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -35,6 +49,28 @@ void Scene::render() const {
     glm::mat4 mvp = viewProjectionMatrix * r->modelMatrix();
     GLuint mvpLocation = program->mvpLocation();
     glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, &mvp[0][0]);
+
+    // Lights
+    GLuint lightLocation = program->ambientLightLocation();
+    mAmbientLight.useAtLocation(lightLocation);
+
+    lightLocation = program->pointLightsLocation();
+    for (PointLight *light : mPointLights) {
+      light->useAtLocation(lightLocation);
+      lightLocation += light->locationSize();
+    }
+
+    lightLocation = program->directionalLightsLocation();
+    for (DirectionalLight *light : mDirectionalLights) {
+      light->useAtLocation(lightLocation);
+      lightLocation += light->locationSize();
+    }
+
+    lightLocation = program->spotLightsLocation();
+    for (SpotLight *light : mSpotLights) {
+      light->useAtLocation(lightLocation);
+      lightLocation += light->locationSize();
+    }
 
     Texture *texture = r->material()->texture();
     if (texture) {

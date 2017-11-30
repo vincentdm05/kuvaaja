@@ -11,6 +11,10 @@ ShaderProgram::ShaderProgram() :
   mVertexShaderName(0),
   mFragmentShaderName(0),
   mMvpLocation(0),
+  mAmbientLightLocation(0),
+  mPointLightsLocation(0),
+  mDirectionalLightsLocation(0),
+  mSpotLightsLocation(0),
   mTextureLocation(0) {
   mTextureUnit = cTextureUnits++;
 }
@@ -88,6 +92,18 @@ void ShaderProgram::setUniform(Uniform uniform) {
   switch (uniform) {
   case MVP:
     mMvpLocation = glGetUniformLocation(mProgramName, "mvp");
+    break;
+  case AMBIENT_LIGHT:
+    mAmbientLightLocation = glGetUniformLocation(mProgramName, "ambientLight");
+    break;
+  case POINT_LIGHTS:
+    mPointLightsLocation = glGetUniformLocation(mProgramName, "pointLights");
+    break;
+  case DIRECTIONAL_LIGHTS:
+    mDirectionalLightsLocation = glGetUniformLocation(mProgramName, "directionalLights");
+    break;
+  case SPOT_LIGHTS:
+    mSpotLightsLocation = glGetUniformLocation(mProgramName, "spotLights");
     break;
   case TEXTURE:
     mTextureLocation = glGetUniformLocation(mProgramName, "textureSampler");
