@@ -10,7 +10,8 @@ ShaderProgram::ShaderProgram() :
   mProgramName(0),
   mVertexShaderName(0),
   mFragmentShaderName(0),
-  mMvpLocation(0),
+  mMatModelViewProjectionLocation(0),
+  mMatInverseTransposeModelLocation(0),
   mAmbientLightLocation(0),
   mPointLightsLocation(0),
   mDirectionalLightsLocation(0),
@@ -90,8 +91,11 @@ bool ShaderProgram::linkShaders() {
 
 void ShaderProgram::setUniform(Uniform uniform) {
   switch (uniform) {
-  case MVP:
-    mMvpLocation = glGetUniformLocation(mProgramName, "mvp");
+  case MAT_MODEL_VIEW_PROJECTION:
+    mMatModelViewProjectionLocation = glGetUniformLocation(mProgramName, "modelViewProjection");
+    break;
+  case MAT_INVERSE_TRANSPOSE_MODEL:
+    mMatInverseTransposeModelLocation = glGetUniformLocation(mProgramName, "inverseTransposeModel");
     break;
   case AMBIENT_LIGHT:
     mAmbientLightLocation = glGetUniformLocation(mProgramName, "ambientLight");
@@ -108,6 +112,8 @@ void ShaderProgram::setUniform(Uniform uniform) {
   case TEXTURE:
     mTextureLocation = glGetUniformLocation(mProgramName, "textureSampler");
     break;
+  default:
+    std::cerr << "Trying to set an unknown uniform.\n";
   }
 }
 

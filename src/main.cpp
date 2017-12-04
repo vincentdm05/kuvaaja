@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 int main(int argc, char *argv[]) {
   Context *context;
@@ -29,7 +30,7 @@ int main(int argc, char *argv[]) {
   scene->setAmbientLight(1.0f, 1.0f, 1.0f, 0.2f);
   DirectionalLight *directionalLight = new DirectionalLight();
   directionalLight->setColor(glm::vec3(0.2f, 0.5f, 0.1f));
-  directionalLight->setDirection(glm::vec3(-0.1f, -1.0f, 0.0f));
+  directionalLight->setDirection(glm::vec3(0.5f, -1.0f, 0.5f));
   scene->addDirectionalLight(directionalLight);
 
   // Setup camera
@@ -51,7 +52,8 @@ int main(int argc, char *argv[]) {
   shaderProgram->linkShaders();
   // TODO: get rid of the need to do this from outside.
   // Instead, keep track of what is used in the program from, e.g., the scene
-  shaderProgram->setUniform(Uniform::MVP);
+  shaderProgram->setUniform(Uniform::MAT_MODEL_VIEW_PROJECTION);  // For vertices
+  shaderProgram->setUniform(Uniform::MAT_INVERSE_TRANSPOSE_MODEL);  // For normals
   shaderProgram->setUniform(Uniform::TEXTURE);
   shaderProgram->setUniform(Uniform::AMBIENT_LIGHT);
   shaderProgram->setUniform(Uniform::DIRECTIONAL_LIGHTS);
@@ -108,6 +110,14 @@ int main(int argc, char *argv[]) {
   const unsigned int nCubeVertices = sizeof(cubeTriangleData) / (3 * sizeof(float));
   cubeRenderable->setVertexData(cubeTriangleData, nCubeVertices);
   cubeRenderable->scale(0.75f, 0.75f, 0.75f);
+
+  // TODO: compute actual normal
+  std::vector<glm::vec3> cubeNormals;
+  for (int i = 0; i < nCubeVertices; i++) {
+    glm::vec3 normal = -glm::normalize(glm::vec3(cubeTriangleData[3 * i], cubeTriangleData[3 * i + 1], cubeTriangleData[3 * i + 2]));
+    cubeNormals.push_back(normal);
+  }
+  cubeRenderable->setNormalData(cubeNormals);
 
   static float cubeColorData[nCubeVertices * 3];
   for (int i = 0; i < nCubeVertices; i++) {
@@ -175,6 +185,11 @@ int main(int argc, char *argv[]) {
   triangleRenderable->setVertexData(triangleData, nTriangleVertices);
   triangleRenderable->rotate(1.2f, 0.0f, 1.0f, 0.0);
   triangleRenderable->scale(3.0f, 3.0f, 1.0f);
+
+  std::vector<glm::vec3> triangleNormalData;
+  for (int i = 0; i < nTriangleVertices; i++)
+    triangleNormalData.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+  triangleRenderable->setNormalData(triangleNormalData);
 
   const float triangleColorData[] = {
     1.0f, 0.0f, 0.0f,

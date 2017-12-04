@@ -1,5 +1,6 @@
 #version 330 core
 
+in vec3 fragmentNormal; // In world space
 in vec3 fragmentColor;
 in vec2 texUV;
 
@@ -27,13 +28,17 @@ struct SpotLight {
   vec4 direction;
 };
 
+// TODO: use UBOs instead
 uniform PointLight pointLights[MAX_LIGHTS];
-uniform DirectionalLight directionalLight[MAX_LIGHTS];
+// uniform DirectionalLight directionalLights[MAX_LIGHTS];
+uniform vec4 directionalLights;
 uniform SpotLight spotLights[MAX_LIGHTS];
 
 uniform sampler2D textureSampler;
 
 void main() {
+  vec3 normal = normalize(fragmentNormal);
+
   // Ambient light
   color = ambientLight.xyz * ambientLight.w;
 
@@ -45,13 +50,15 @@ void main() {
   }
 
   // Directional lights
-  for (int i = 0; i < MAX_LIGHTS; i++) {
-    DirectionalLight light = directionalLight[i];
-    if (light.props.intensity == 0.0)
-      continue;
+  // for (int i = 0; i < MAX_LIGHTS; i++) {
+  //   DirectionalLight light = directionalLights[i];
+  //   if (light.props.intensity == 0.0)
+  //     continue;
 
-    // TODO: get the normals
-  }
+    // float cosTheta = clamp(dot(light.direction.xyz, normal), 0.0, 1.0);
+    // color += light.props.intensity * light.props.color * cosTheta;
+  // }
+  color += clamp(dot(directionalLights.xyz, normal), 0.0, 1.0);
 
   // Spot lights
   for (int i = 0; i < MAX_LIGHTS; i++) {

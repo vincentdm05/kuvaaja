@@ -11,12 +11,14 @@ enum ShaderType {
 };
 
 enum Uniform {
-  MVP,
+  MAT_MODEL_VIEW_PROJECTION,
+  MAT_INVERSE_TRANSPOSE_MODEL,
   TEXTURE,
   AMBIENT_LIGHT,
   POINT_LIGHTS,
   DIRECTIONAL_LIGHTS,
-  SPOT_LIGHTS
+  SPOT_LIGHTS,
+  UNIFORM_COUNT
 };
 
 class ShaderProgram {
@@ -29,7 +31,8 @@ public:
   void setUniform(Uniform uniform);
 
   GLuint name() const { return mProgramName; }
-  GLuint mvpLocation() const { return mMvpLocation; }
+  GLuint matModelViewProjectionLocation() const { return mMatModelViewProjectionLocation; }
+  GLuint matInverseTransposeModelLocation() const { return mMatInverseTransposeModelLocation; }
   GLuint ambientLightLocation() const { return mAmbientLightLocation; }
   GLuint pointLightsLocation() const { return mPointLightsLocation; }
   GLuint directionalLightsLocation() const { return mDirectionalLightsLocation; }
@@ -42,7 +45,8 @@ private:
   GLuint mVertexShaderName;
   GLuint mFragmentShaderName;
   // TODO: generalize uniform location mecanism
-  GLuint mMvpLocation;
+  GLuint mMatModelViewProjectionLocation;
+  GLuint mMatInverseTransposeModelLocation;
   GLuint mAmbientLightLocation;
   GLuint mPointLightsLocation;
   GLuint mDirectionalLightsLocation;

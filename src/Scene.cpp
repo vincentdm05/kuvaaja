@@ -47,8 +47,13 @@ void Scene::render() const {
 
     // Update mvp for the shader
     glm::mat4 mvp = viewProjectionMatrix * r->modelMatrix();
-    GLuint mvpLocation = program->mvpLocation();
+    GLuint mvpLocation = program->matModelViewProjectionLocation();
     glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, &mvp[0][0]);
+
+    // Update inverse transpose model matrix for normals
+    glm::mat4 itm = glm::transpose(glm::inverse(r->modelMatrix()));
+    GLuint itmLocation = program->matInverseTransposeModelLocation();
+    glUniformMatrix4fv(itmLocation, 1, GL_FALSE, &itm[0][0]);
 
     // Lights
     GLuint lightLocation = program->ambientLightLocation();
