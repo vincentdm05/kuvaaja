@@ -1,8 +1,7 @@
 #ifndef SCENE_HPP
 #define SCENE_HPP
 
-#include <GL/Glew.h>
-#include <glm/glm.hpp>
+#include "Common.hpp"
 
 #include "Light.hpp"
 

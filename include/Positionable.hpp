@@ -1,7 +1,8 @@
 #ifndef POSITIONABLE_HPP
 #define POSITIONABLE_HPP
 
-#include <glm/glm.hpp>
+#include "Common.hpp"
+
 #include <glm/gtc/matrix_transform.hpp>
 
 class Positionable {

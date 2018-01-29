@@ -1,7 +1,8 @@
 #ifndef CONTEXT_HPP
 #define CONTEXT_HPP
 
-#include <GL/glew.h>
+#include "Common.hpp"
+
 #include <GLFW/glfw3.h>
 
 #include <utility>

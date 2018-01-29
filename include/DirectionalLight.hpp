@@ -1,6 +1,8 @@
 #ifndef DIRECTIONAL_LIGHT_HPP
 #define DIRECTIONAL_LIGHT_HPP
 
+#include "Common.hpp"
+
 #include "Light.hpp"
 
 class DirectionalLight : public Light {

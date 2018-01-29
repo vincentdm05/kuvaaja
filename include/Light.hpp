@@ -1,8 +1,7 @@
 #ifndef LIGHT_HPP
 #define LIGHT_HPP
 
-#include <GL/Glew.h>
-#include <glm/glm.hpp>
+#include "Common.hpp"
 
 class Light {
 public:

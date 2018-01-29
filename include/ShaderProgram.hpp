@@ -1,7 +1,7 @@
 #ifndef SHADER_PROGRAM_HPP
 #define SHADER_PROGRAM_HPP
 
-#include <GL/glew.h>
+#include "Common.hpp"
 
 #include <string>
 

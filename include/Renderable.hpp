@@ -1,10 +1,9 @@
 #ifndef RENDERABLE_HPP
 #define RENDERABLE_HPP
 
-#include "Positionable.hpp"
+#include "Common.hpp"
 
-#include <GL/glew.h>
-#include <glm/glm.hpp>
+#include "Positionable.hpp"
 
 #include <vector>
 

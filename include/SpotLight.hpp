@@ -1,6 +1,8 @@
 #ifndef SPOT_LIGHT_HPP
 #define SPOT_LIGHT_HPP
 
+#include "Common.hpp"
+
 #include "Light.hpp"
 
 class SpotLight : public Light {

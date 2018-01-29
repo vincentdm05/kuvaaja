@@ -1,7 +1,7 @@
 #ifndef MATERIAL_HPP
 #define MATERIAL_HPP
 
-#include <GL/glew.h>
+#include "Common.hpp"
 
 class ShaderProgram;
 class Texture;
