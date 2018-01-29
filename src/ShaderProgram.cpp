@@ -9,14 +9,7 @@ GLuint ShaderProgram::cTextureUnits = 0;
 ShaderProgram::ShaderProgram() :
   mProgramName(0),
   mVertexShaderName(0),
-  mFragmentShaderName(0),
-  mMatModelViewProjectionLocation(0),
-  mMatInverseTransposeModelLocation(0),
-  mAmbientLightLocation(0),
-  mPointLightsLocation(0),
-  mDirectionalLightsLocation(0),
-  mSpotLightsLocation(0),
-  mTextureLocation(0) {
+  mFragmentShaderName(0) {
   mTextureUnit = cTextureUnits++;
 }
 
@@ -64,6 +57,12 @@ bool ShaderProgram::setShader(const std::string &shaderPath, ShaderType shaderTy
   return true;
 }
 
+GLuint ShaderProgram::name() {
+  if (!mProgramName)
+    linkShaders();
+  return mProgramName;
+}
+
 bool ShaderProgram::linkShaders() {
   // Link
   mProgramName = glCreateProgram();
@@ -87,34 +86,6 @@ bool ShaderProgram::linkShaders() {
   releaseShader(mFragmentShaderName);
 
   return result == GL_TRUE;
-}
-
-void ShaderProgram::setUniform(Uniform uniform) {
-  switch (uniform) {
-  case MAT_MODEL_VIEW_PROJECTION:
-    mMatModelViewProjectionLocation = glGetUniformLocation(mProgramName, "modelViewProjection");
-    break;
-  case MAT_INVERSE_TRANSPOSE_MODEL:
-    mMatInverseTransposeModelLocation = glGetUniformLocation(mProgramName, "inverseTransposeModel");
-    break;
-  case AMBIENT_LIGHT:
-    mAmbientLightLocation = glGetUniformLocation(mProgramName, "ambientLight");
-    break;
-  case POINT_LIGHTS:
-    mPointLightsLocation = glGetUniformLocation(mProgramName, "pointLights");
-    break;
-  case DIRECTIONAL_LIGHTS:
-    mDirectionalLightsLocation = glGetUniformLocation(mProgramName, "directionalLights");
-    break;
-  case SPOT_LIGHTS:
-    mSpotLightsLocation = glGetUniformLocation(mProgramName, "spotLights");
-    break;
-  case TEXTURE:
-    mTextureLocation = glGetUniformLocation(mProgramName, "textureSampler");
-    break;
-  default:
-    std::cerr << "Trying to set an unknown uniform.\n";
-  }
 }
 
 void ShaderProgram::releaseShader(GLuint &shaderName) {

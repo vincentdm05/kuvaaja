@@ -1,6 +1,9 @@
 #include "Renderable.hpp"
 
 #include "Material.hpp"
+#include "ShaderDataManager.hpp"
+
+#include <iostream>
 
 Renderable::Renderable() :
   mVertexArrayName(0),
@@ -9,7 +12,8 @@ Renderable::Renderable() :
   mColorBufferName(0),
   mUvBufferName(0),
   mMaterial(NULL),
-  mVertexCount(0) {
+  mVertexCount(0),
+  mUniformDeclarationBuffer() {
   glGenVertexArrays(1, &mVertexArrayName);
 }
 
@@ -21,7 +25,23 @@ Renderable::~Renderable() {
   glDeleteVertexArrays(1, &mVertexArrayName);
 }
 
+void Renderable::setVertexData(const float *data, unsigned int vertexCount) {
+  setVaoData(data, mVertexBufferName, vertexCount, 3);
+  mVertexCount = vertexCount;
+  mUniformDeclarationBuffer.push_back(UniformType::MAT_MODEL_VIEW_PROJECTION);
+}
+
+void Renderable::setNormalData(const std::vector<glm::vec3> &data) {
+  setVaoData(data, mNormalBufferName);
+  mUniformDeclarationBuffer.push_back(UniformType::MAT_INVERSE_TRANSPOSE_MODEL);
+}
+
 void Renderable::render() const {
+  if (!unbufferUniformDeclarations()) {
+    std::cerr << "Unable to declare uniforms, maybe a material wasn't set?" << std::endl;
+    return;
+  }
+
   glBindVertexArray(mVertexArrayName);
 
   // Draw data
@@ -53,6 +73,26 @@ void Renderable::render() const {
   glDisableVertexAttribArray(0);
 
   glBindVertexArray(0);
+}
+
+bool Renderable::unbufferUniformDeclarations() const {
+  if (mUniformDeclarationBuffer.empty())
+    return true;
+
+  if (!mMaterial)
+    return false;
+
+  ShaderProgram *program = mMaterial->shaderProgram();
+  if (!program)
+    return false;
+
+  for (UniformType &u : mUniformDeclarationBuffer) {
+    if (!ShaderDataManager::shaderDataManagerReference().declareUniform(program, u))
+      return false;
+  }
+  mUniformDeclarationBuffer.clear();
+
+  return true;
 }
 
 void Renderable::setVaoData(const GLfloat *data, GLuint &bufferName, unsigned int count, unsigned int cardinality) {
