@@ -14,10 +14,12 @@ enum KeyType {
   KEY_D = GLFW_KEY_D,
   KEY_E = GLFW_KEY_E,
   KEY_F = GLFW_KEY_F,
+  KEY_I = GLFW_KEY_I,
   KEY_Q = GLFW_KEY_Q,
   KEY_R = GLFW_KEY_R,
   KEY_S = GLFW_KEY_S,
   KEY_W = GLFW_KEY_W,
+  KEY_ESC = GLFW_KEY_ESCAPE,
   KEY_RIGHT = GLFW_KEY_RIGHT,
   KEY_LEFT = GLFW_KEY_LEFT,
   KEY_DOWN = GLFW_KEY_DOWN,
@@ -35,6 +37,7 @@ public:
 
   void render();
   bool canRender() const;
+  void requestClose() { mCloseRequested = true; }
 
   double loopTime() const { return glfwGetTime() - mTimeBeforeLastRender; }
   void cursorPosition(double *x, double *y) const { glfwGetCursorPos(mWindow, x, y); }
@@ -56,6 +59,7 @@ private:
 
   Scene *mScene;
 
+  bool mCloseRequested;
   double mTimeBeforeLastRender;
 };
 

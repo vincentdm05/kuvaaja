@@ -10,13 +10,24 @@ Control::Control() :
   mPreviousCursorX(0.0),
   mPreviousCursorY(0.0),
   mCtrlPressed(false),
-  mCtrlToggled(false) {}
+  mCtrlToggled(false),
+  mIPressed(false) {}
 
 void Control::setContext(Context *context) {
   mContext = context;
 
   if (mContext)
     mContext->cursorPosition(&mPreviousCursorX, &mPreviousCursorY);
+}
+
+void Control::gatherInput() {
+  // TODO: create an input system buffering events
+  if (!mContext)
+    return;
+
+  // Listen to closing event
+  if (mContext->keyPressed(KEY_ESC))
+    mContext->requestClose();
 }
 
 void Control::updateCamera() {
@@ -81,4 +92,10 @@ void Control::updateCamera() {
     mCtrlPressed = false;
   if (mCtrlToggled)
     mCamera->setUp(glm::vec3(0.0f, 1.0f, 0.0f));
+}
+
+bool Control::iPressed() {
+  bool pressed = !mIPressed && mContext->keyPressed(KEY_I);
+  mIPressed = mContext->keyPressed(KEY_I);
+  return pressed;
 }

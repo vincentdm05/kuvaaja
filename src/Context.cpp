@@ -7,6 +7,7 @@ Context::Context() :
   mWindowWidth(1024),
   mWindowHeight(768),
   mScene(NULL),
+  mCloseRequested(false),
   mTimeBeforeLastRender(0.0) {
   if (!glfwInit())
     throw "Failed to initialise GLFW.";
@@ -54,5 +55,5 @@ void Context::render() {
 }
 
 bool Context::canRender() const {
-  return glfwGetKey(mWindow, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(mWindow) == 0;
+  return !mCloseRequested && glfwWindowShouldClose(mWindow) == 0;
 }

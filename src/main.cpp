@@ -9,6 +9,7 @@
 #include "ShaderProgram.hpp"
 #include "Texture.hpp"
 
+#include <iomanip>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -215,15 +216,33 @@ int main(int argc, char *argv[]) {
 
   // Render loop
   double deltaTime;
+  double stopWatch = 0.0f;
+  bool showFPS = false;
   while (context->canRender()) {
+    control->gatherInput();
+    control->updateCamera();
+
     deltaTime = context->loopTime();
     cubeRenderable->rotate(deltaTime, 1.0f, 1.0f, 0.0f);
 //    triangleRenderable->rotate(deltaTime, 0.0f, 1.0f, 0.0f);
 
-    control->updateCamera();
+    if (control->iPressed()) {
+      showFPS = !showFPS;
+      if (!showFPS)
+        std::cout << std::endl;
+    }
+    if (showFPS) {
+      stopWatch += deltaTime;
+      if (stopWatch > 0.5f) {
+        std::cout << "\r" << std::setw(10) << deltaTime << " ms/frame (" << (int)(1 / deltaTime) << std::setw(3) << " FPS)" << std::setw(10) << std::setfill(' ') << std::flush;
+        stopWatch = 0.0f;
+      }
+    }
 
     context->render();
   }
+  if (showFPS)
+    std::cout << std::endl;
 
   delete control;
   delete texture;

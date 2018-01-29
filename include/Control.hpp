@@ -11,7 +11,10 @@ public:
 
   void setContext(Context *context);
   void setCamera(Camera *camera) { mCamera = camera; }
+  void gatherInput();
   void updateCamera();
+
+  bool iPressed();
 
 private:
   Context *mContext;
@@ -23,6 +26,7 @@ private:
 
   bool mCtrlPressed;
   bool mCtrlToggled;
+  bool mIPressed;
 };
 
 #endif // CONTROL_HPP
