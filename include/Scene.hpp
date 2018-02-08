@@ -13,7 +13,8 @@ class PointLight;
 class Renderable;
 class SpotLight;
 
-class Scene {
+class Scene
+{
 public:
   Scene();
   ~Scene() {}
@@ -47,8 +48,10 @@ private:
 };
 
 template<class T>
-void Scene::deleteAll(std::vector<T> &elements) {
-  for (T e : elements) {
+void Scene::deleteAll(std::vector<T> &elements)
+{
+  for (T e : elements)
+  {
     delete e;
     e = NULL;
   }

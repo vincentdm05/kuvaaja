@@ -14,11 +14,15 @@
 #include <string>
 #include <vector>
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   Context *context;
-  try {
+  try
+  {
     context = new Context();
-  } catch (const char *error) {
+  }
+  catch (const char *error)
+  {
     std::cerr << error << std::endl;
     return -1;
   }
@@ -70,7 +74,8 @@ int main(int argc, char *argv[]) {
   cubeRenderable.setMaterial(&cubeMaterial);
   scene.addRenderable(&cubeRenderable);
 
-  const float cubeTriangleData[] = {
+  const float cubeTriangleData[] =
+  {
     -1.0f, -1.0f, -1.0f,
     -1.0f, -1.0f, 1.0f,
     -1.0f, 1.0f, 1.0f,
@@ -114,14 +119,16 @@ int main(int argc, char *argv[]) {
 
   // TODO: compute actual normal
   std::vector<glm::vec3> cubeNormals;
-  for (int i = 0; i < nCubeVertices; i++) {
+  for (int i = 0; i < nCubeVertices; i++)
+  {
     glm::vec3 normal = -glm::normalize(glm::vec3(cubeTriangleData[3 * i], cubeTriangleData[3 * i + 1], cubeTriangleData[3 * i + 2]));
     cubeNormals.push_back(normal);
   }
   cubeRenderable.setNormalData(cubeNormals);
 
   static float cubeColorData[nCubeVertices * 3];
-  for (int i = 0; i < nCubeVertices; i++) {
+  for (int i = 0; i < nCubeVertices; i++)
+  {
     cubeColorData[i * 3] = (cubeTriangleData[i * 3] + 1) / 2.0f;
     cubeColorData[i * 3 + 1] = (cubeTriangleData[i * 3 + 1] + 1) / 2.0f;
     cubeColorData[i * 3 + 2] = (cubeTriangleData[i * 3 + 2] + 1) / 2.0f;
@@ -132,7 +139,8 @@ int main(int argc, char *argv[]) {
 //  texture.loadTestData();
   texture.load("resources/images/img_test.png");
   cubeRenderable.material()->setTexture(&texture);
-  const float cubeUvData[] = {
+  const float cubeUvData[] =
+  {
     1.0f, 0.0f, // -1.0f, -1.0f, -1.0f,
     0.0f, 0.0f, // -1.0f, -1.0f, 1.0f,
     0.0f, 1.0f, // -1.0f, 1.0f, 1.0f,
@@ -177,7 +185,8 @@ int main(int argc, char *argv[]) {
   triangleRenderable.setMaterial(&triangleMaterial);
   scene.addRenderable(&triangleRenderable);
 
-  const float triangleData[] = {
+  const float triangleData[] =
+  {
     -1.0f, -1.0f, 0.0f,
     1.0f, -1.0f, 0.0f,
     0.0f, 1.0f, 0.0f
@@ -192,14 +201,16 @@ int main(int argc, char *argv[]) {
     triangleNormalData.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
   triangleRenderable.setNormalData(triangleNormalData);
 
-  const float triangleColorData[] = {
+  const float triangleColorData[] =
+  {
     1.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 1.0f
   };
   triangleRenderable.setColorData(triangleColorData, nTriangleVertices);
 
-  const float triangleUvData[] = {
+  const float triangleUvData[] =
+  {
     0.0f, 0.0f,
     1.0f, 0.0f,
     0.5f, 1.0f
@@ -218,20 +229,24 @@ int main(int argc, char *argv[]) {
   double deltaTime;
   double stopWatch = 0.0f;
   bool showFPS = false;
-  while (context->canRender()) {
+  while (context->canRender())
+  {
     control.gatherInput();
     control.updateCamera();
 
     deltaTime = context->loopTime();
 
-    if (control.iPressed()) {
+    if (control.iPressed())
+    {
       showFPS = !showFPS;
       if (!showFPS)
         std::cout << std::endl;
     }
-    if (showFPS) {
+    if (showFPS)
+    {
       stopWatch += deltaTime;
-      if (stopWatch > 0.5f) {
+      if (stopWatch > 0.5f)
+      {
         std::cout << "\r" << std::setw(10) << deltaTime << " ms/frame (" << (int)(1 / deltaTime) << std::setw(3) << " FPS)" << std::setw(10) << std::setfill(' ') << std::flush;
         stopWatch = 0.0f;
       }

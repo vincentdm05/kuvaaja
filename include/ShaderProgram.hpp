@@ -5,12 +5,14 @@
 
 #include <string>
 
-enum ShaderType {
+enum ShaderType
+{
   VERTEX = GL_VERTEX_SHADER,
   FRAGMENT = GL_FRAGMENT_SHADER
 };
 
-enum Uniform {
+enum Uniform
+{
   MAT_MODEL_VIEW_PROJECTION,
   MAT_INVERSE_TRANSPOSE_MODEL,
   TEXTURE,
@@ -21,7 +23,8 @@ enum Uniform {
   UNIFORM_COUNT
 };
 
-class ShaderProgram {
+class ShaderProgram
+{
 public:
   ShaderProgram();
   ~ShaderProgram();

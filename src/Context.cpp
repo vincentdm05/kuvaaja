@@ -2,13 +2,14 @@
 
 #include "Scene.hpp"
 
-Context::Context() :
-  mWindow(NULL),
-  mWindowWidth(1024),
-  mWindowHeight(768),
-  mScene(NULL),
-  mCloseRequested(false),
-  mTimeBeforeLastRender(0.0) {
+Context::Context()
+  : mWindow(NULL)
+  , mWindowWidth(1024)
+  , mWindowHeight(768)
+  , mScene(NULL)
+  , mCloseRequested(false)
+  , mTimeBeforeLastRender(0.0)
+{
   if (!glfwInit())
     throw "Failed to initialise GLFW.";
 
@@ -19,13 +20,15 @@ Context::Context() :
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   mWindow = glfwCreateWindow(mWindowWidth, mWindowHeight, "kuvaaja", NULL, NULL);
-  if (mWindow == NULL) {
+  if (mWindow == NULL)
+  {
     glfwTerminate();
     throw "Failed to open GLFW window.";
   }
   glfwMakeContextCurrent(mWindow);
   glewExperimental = true; // Needed in core profile
-  if (glewInit() != GLEW_OK) {
+  if (glewInit() != GLEW_OK)
+  {
     glfwTerminate();
     throw "Failed to initialize GLEW.";
   }
@@ -38,11 +41,13 @@ Context::Context() :
   mTimeBeforeLastRender = glfwGetTime();
 }
 
-Context::~Context() {
+Context::~Context()
+{
   glfwTerminate();
 }
 
-void Context::render() {
+void Context::render()
+{
   if (!mScene)
     return;
 
@@ -54,6 +59,7 @@ void Context::render() {
   glfwPollEvents();
 }
 
-bool Context::canRender() const {
+bool Context::canRender() const
+{
   return !mCloseRequested && glfwWindowShouldClose(mWindow) == 0;
 }

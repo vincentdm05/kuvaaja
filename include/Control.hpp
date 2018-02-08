@@ -4,7 +4,8 @@
 class Camera;
 class Context;
 
-class Control {
+class Control
+{
 public:
   Control();
   ~Control() {}

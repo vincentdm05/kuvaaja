@@ -9,36 +9,42 @@
 #include "SpotLight.hpp"
 #include "Texture.hpp"
 
-Scene::Scene() :
-  mCamera(NULL),
-  mAmbientLight(1.0f, 1.0f, 1.0f, 1.0f) {
+Scene::Scene()
+  : mCamera(NULL)
+  , mAmbientLight(1.0f, 1.0f, 1.0f, 1.0f)
+{
   setupGL();
 }
 
-void Scene::setAmbientLight(float r, float g, float b, float intensity) {
+void Scene::setAmbientLight(float r, float g, float b, float intensity)
+{
   mAmbientLight[0] = r;
   mAmbientLight[1] = g;
   mAmbientLight[2] = b;
   mAmbientLight[3] = intensity;
 }
 
-void Scene::deleteAllRenderables() {
+void Scene::deleteAllRenderables()
+{
   deleteAll(mRenderables);
 }
 
-void Scene::deleteAllLights() {
+void Scene::deleteAllLights()
+{
   deleteAll(mPointLights);
   deleteAll(mDirectionalLights);
   deleteAll(mSpotLights);
 }
 
 // This is a naive rendering method, it should be improved in the future.
-void Scene::render() const {
+void Scene::render() const
+{
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glm::mat4 viewProjectionMatrix = mCamera->projectionMatrix() * mCamera->viewMatrix();
 
-  for (Renderable *r : mRenderables) {
+  for (Renderable *r : mRenderables)
+  {
     r->material()->useProgram();
 
     ShaderProgram *program = r->material()->shaderProgram();
@@ -60,25 +66,29 @@ void Scene::render() const {
     mAmbientLight.useAtLocation(lightLocation);
 
     lightLocation = program->pointLightsLocation();
-    for (PointLight *light : mPointLights) {
+    for (PointLight *light : mPointLights)
+    {
       light->useAtLocation(lightLocation);
       lightLocation += light->locationSize();
     }
 
     lightLocation = program->directionalLightsLocation();
-    for (DirectionalLight *light : mDirectionalLights) {
+    for (DirectionalLight *light : mDirectionalLights)
+    {
       light->useAtLocation(lightLocation);
       lightLocation += light->locationSize();
     }
 
     lightLocation = program->spotLightsLocation();
-    for (SpotLight *light : mSpotLights) {
+    for (SpotLight *light : mSpotLights)
+    {
       light->useAtLocation(lightLocation);
       lightLocation += light->locationSize();
     }
 
     Texture *texture = r->material()->texture();
-    if (texture) {
+    if (texture)
+    {
       GLuint textureUnit = program->textureUnit();
       GLuint textureLocation = program->textureLocation();
       glActiveTexture(textureUnit);
@@ -90,7 +100,8 @@ void Scene::render() const {
   }
 }
 
-void Scene::setupGL() const {
+void Scene::setupGL() const
+{
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
 

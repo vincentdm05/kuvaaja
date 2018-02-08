@@ -3,24 +3,27 @@
 #include "Camera.hpp"
 #include "Context.hpp"
 
-Control::Control() :
-  mContext(NULL),
-  mCamera(NULL),
-  mSpeed(0.1f),
-  mPreviousCursorX(0.0),
-  mPreviousCursorY(0.0),
-  mCtrlPressed(false),
-  mCtrlToggled(false),
-  mIPressed(false) {}
+Control::Control()
+  : mContext(NULL)
+  , mCamera(NULL)
+  , mSpeed(0.1f)
+  , mPreviousCursorX(0.0)
+  , mPreviousCursorY(0.0)
+  , mCtrlPressed(false)
+  , mCtrlToggled(false)
+  , mIPressed(false)
+{}
 
-void Control::setContext(Context *context) {
+void Control::setContext(Context *context)
+{
   mContext = context;
 
   if (mContext)
     mContext->cursorPosition(&mPreviousCursorX, &mPreviousCursorY);
 }
 
-void Control::gatherInput() {
+void Control::gatherInput()
+{
   // TODO: create an input system buffering events
   if (!mContext)
     return;
@@ -30,7 +33,8 @@ void Control::gatherInput() {
     mContext->requestClose();
 }
 
-void Control::updateCamera() {
+void Control::updateCamera()
+{
   if (!mCamera || !mContext)
     return;
 
@@ -51,9 +55,11 @@ void Control::updateCamera() {
 
   if (mouseX != 0)
     mCamera->applyYaw(-mouseX * 180 * mSpeed);
-  if (mouseY != 0) {
+  if (mouseY != 0)
+  {
     float pitchingAngle = -mouseY * 180 * mSpeed;
-    if (mCtrlToggled) {
+    if (mCtrlToggled)
+    {
       float maxAngle = 90 - std::fabs(glm::degrees(std::acos(glm::dot(glm::vec3(0.0f, 1.0f, 0.0f), -mCamera->forward()))) - 90) - 10;
       int sign = (0 < pitchingAngle) - (pitchingAngle < 0);
       pitchingAngle = sign * std::fmin(maxAngle, std::fabs(pitchingAngle));
@@ -85,16 +91,19 @@ void Control::updateCamera() {
     mCamera->setPosition(mCamera->position() - mCamera->up() * loopSpeed * speed);
 
   // Toggle to restrain camera up
-  if (mContext->keyPressed(KEY_LEFT_CTRL, KEY_RIGHT_CTRL) && !mCtrlPressed) {
+  if (mContext->keyPressed(KEY_LEFT_CTRL, KEY_RIGHT_CTRL) && !mCtrlPressed)
+  {
     mCtrlToggled = !mCtrlToggled;
     mCtrlPressed = true;
-  } else if (!mContext->keyPressed(KEY_LEFT_CTRL, KEY_RIGHT_CTRL) && mCtrlPressed)
+  }
+  else if (!mContext->keyPressed(KEY_LEFT_CTRL, KEY_RIGHT_CTRL) && mCtrlPressed)
     mCtrlPressed = false;
   if (mCtrlToggled)
     mCamera->setUp(glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
-bool Control::iPressed() {
+bool Control::iPressed()
+{
   bool pressed = !mIPressed && mContext->keyPressed(KEY_I);
   mIPressed = mContext->keyPressed(KEY_I);
   return pressed;

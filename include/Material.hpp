@@ -6,7 +6,8 @@
 class ShaderProgram;
 class Texture;
 
-class Material {
+class Material
+{
 public:
   Material();
   ~Material() {}
