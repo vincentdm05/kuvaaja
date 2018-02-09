@@ -128,6 +128,9 @@ int main(int argc, char *argv[])
   cubeRenderable.setColorData(cubeColorData, nCubeVertices);
 
   Texture texture;
+  texture.setGenerateMips(true);
+  texture.setBorderRepeat(true);
+  texture.setFlipVertically(true);
 //  texture.loadTestData();
   texture.load("resources/images/img_test.png");
   cubeRenderable.material()->setTexture(&texture);

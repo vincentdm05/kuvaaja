@@ -6,6 +6,7 @@ Texture::Texture()
   : mTextureName(0)
   , mWidth(0)
   , mHeight(0)
+  , mSoilFlags(0)
 {
   glGenTextures(1, &mTextureName);
 }
@@ -35,11 +36,7 @@ void Texture::loadTestData()
 
 void Texture::load(const std::string &path)
 {
-  mTextureName = SOIL_load_OGL_texture(path.c_str(), SOIL_LOAD_AUTO, mTextureName,
-                                       SOIL_FLAG_MIPMAPS |
-                                       SOIL_FLAG_TEXTURE_REPEATS |
-                                       SOIL_FLAG_INVERT_Y
-                                       );
+  mTextureName = SOIL_load_OGL_texture(path.c_str(), SOIL_LOAD_AUTO, mTextureName, mSoilFlags);
 
   glBindTexture(GL_TEXTURE_2D, mTextureName);
 
@@ -47,4 +44,50 @@ void Texture::load(const std::string &path)
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
   glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+// TODO: apply flags retroactively
+void Texture::setForcePowerOfTwo(bool value)
+{
+  setBitFlag(SOIL_FLAG_POWER_OF_TWO, value);
+}
+
+void Texture::setGenerateMips(bool value)
+{
+  setBitFlag(SOIL_FLAG_MIPMAPS, value);
+}
+
+void Texture::setBorderRepeat(bool value)
+{
+  setBitFlag(SOIL_FLAG_TEXTURE_REPEATS, value);
+}
+
+void Texture::setFlipVertically(bool value)
+{
+  setBitFlag(SOIL_FLAG_INVERT_Y, value);
+}
+
+bool Texture::getForcePowerOfTwo()
+{
+  return mSoilFlags & SOIL_FLAG_POWER_OF_TWO;
+}
+
+bool Texture::getGenerateMips()
+{
+  return mSoilFlags & SOIL_FLAG_MIPMAPS;
+}
+
+bool Texture::getBorderRepeat()
+{
+  return mSoilFlags & SOIL_FLAG_TEXTURE_REPEATS;
+}
+
+bool Texture::getFlipVertically()
+{
+  return mSoilFlags & SOIL_FLAG_INVERT_Y;
+}
+
+void Texture::setBitFlag(unsigned int flag, bool value)
+{
+  mSoilFlags = mSoilFlags & (~flag | (flag & value));
 }

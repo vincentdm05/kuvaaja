@@ -14,6 +14,16 @@ public:
   void loadTestData();
   void load(const std::string &path);
 
+  void setForcePowerOfTwo(bool value);
+  void setGenerateMips(bool value);
+  void setBorderRepeat(bool value);
+  void setFlipVertically(bool value);
+
+  bool getForcePowerOfTwo();
+  bool getGenerateMips();
+  bool getBorderRepeat();
+  bool getFlipVertically();
+
   GLuint name() const { return mTextureName; }
 
 private:
@@ -21,6 +31,11 @@ private:
 
   GLuint mWidth;
   GLuint mHeight;
+
+  unsigned int mSoilFlags;
+
+  // Helper
+  void setBitFlag(unsigned int flag, bool value);
 };
 
 #endif // TEXTURE_HPP
