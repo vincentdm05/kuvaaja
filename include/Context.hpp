@@ -9,7 +9,8 @@
 
 class Scene;
 
-enum KeyType {
+enum KeyType
+{
   KEY_A = GLFW_KEY_A,
   KEY_D = GLFW_KEY_D,
   KEY_E = GLFW_KEY_E,
@@ -30,7 +31,8 @@ enum KeyType {
   KEY_RIGHT_CTRL = GLFW_KEY_RIGHT_CONTROL
 };
 
-class Context {
+class Context
+{
 public:
   Context();
   ~Context();
@@ -43,7 +45,8 @@ public:
   void cursorPosition(double *x, double *y) const { glfwGetCursorPos(mWindow, x, y); }
   bool keyPressed(KeyType key) const { return glfwGetKey(mWindow, key) == GLFW_PRESS; }
   template <typename ...Tail>
-  bool keyPressed(KeyType key, Tail&&... tail) const {
+  bool keyPressed(KeyType key, Tail&&... tail) const
+  {
     return glfwGetKey(mWindow, key) == GLFW_PRESS || keyPressed(std::forward<Tail>(tail)...);
   }
 

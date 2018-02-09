@@ -5,12 +5,14 @@
 
 #include <string>
 
-enum ShaderType {
+enum ShaderType
+{
   VERTEX = GL_VERTEX_SHADER,
   FRAGMENT = GL_FRAGMENT_SHADER
 };
 
-class ShaderProgram {
+class ShaderProgram
+{
 public:
   ShaderProgram();
   ~ShaderProgram();

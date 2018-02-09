@@ -11,7 +11,8 @@
 
 class Material;
 
-class Renderable : public Positionable {
+class Renderable : public Positionable
+{
 public:
   Renderable();
   ~Renderable();

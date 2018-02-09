@@ -2,18 +2,23 @@
 
 #include <SOIL.h>
 
-Texture::Texture() :
-  mTextureName(0),
-  mWidth(0),
-  mHeight(0) {
+Texture::Texture()
+  : mTextureName(0)
+  , mWidth(0)
+  , mHeight(0)
+{
   glGenTextures(1, &mTextureName);
 }
 
-void Texture::loadTestData() {
-  const GLuint data[] = {0x000000FF, 0xFF0000FF, 0xFFFFFFFF, 0xFFFFFFFF,
-                         0x0000FFFF, 0x00FF00FF, 0xFFFFFFFF, 0xFFFFFFFF,
-                         0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0x000000FF,
-                         0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0x000000FF};
+void Texture::loadTestData()
+{
+  const GLuint data[] =
+  {
+    0x000000FF, 0xFF0000FF, 0xFFFFFFFF, 0xFFFFFFFF,
+    0x0000FFFF, 0x00FF00FF, 0xFFFFFFFF, 0xFFFFFFFF,
+    0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0x000000FF,
+    0xFFFFFFFF, 0xFFFFFFFF, 0x000000FF, 0x000000F
+  };
   mWidth = mHeight = 4;
 
   glBindTexture(GL_TEXTURE_2D, mTextureName);
@@ -28,7 +33,8 @@ void Texture::loadTestData() {
   glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Texture::load(const std::string &path) {
+void Texture::load(const std::string &path)
+{
   mTextureName = SOIL_load_OGL_texture(path.c_str(), SOIL_LOAD_AUTO, mTextureName,
                                        SOIL_FLAG_MIPMAPS |
                                        SOIL_FLAG_TEXTURE_REPEATS |

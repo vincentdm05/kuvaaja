@@ -10,17 +10,19 @@
 #include "SpotLight.hpp"
 #include "Texture.hpp"
 
-Scene::Scene() :
-  mCamera(NULL),
-  mAmbientLight(1.0f, 1.0f, 1.0f, 1.0f),
-  mPointLights(),
-  mDirectionalLights(),
-  mSpotLights(),
-  mUniformDeclarationBuffer() {
+Scene::Scene()
+  : mCamera(NULL)
+  , mAmbientLight(1.0f, 1.0f, 1.0f, 1.0f)
+  , mPointLights()
+  , mDirectionalLights()
+  , mSpotLights()
+  , mUniformDeclarationBuffer()
+{
   setupGL();
 }
 
-void Scene::setAmbientLight(float r, float g, float b, float intensity) {
+void Scene::setAmbientLight(float r, float g, float b, float intensity)
+{
   mAmbientLight[0] = r;
   mAmbientLight[1] = g;
   mAmbientLight[2] = b;
@@ -33,26 +35,31 @@ void Scene::addDirectionalLight(DirectionalLight *directionalLight) {
   mUniformDeclarationBuffer.push_back(UniformType::DIRECTIONAL_LIGHTS);
 }
 
-void Scene::deleteAllRenderables() {
+void Scene::deleteAllRenderables()
+{
   deleteAll(mRenderables);
 }
 
-void Scene::deleteAllLights() {
+void Scene::deleteAllLights()
+{
   deleteAll(mPointLights);
   deleteAll(mDirectionalLights);
   deleteAll(mSpotLights);
 }
 
 // TODO: This is a naive rendering method, it should be improved in the future.
-void Scene::render() const {
+void Scene::render() const
+{
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glm::mat4 viewProjectionMatrix = mCamera->projectionMatrix() * mCamera->viewMatrix();
 
   // Prepare uniforms
-  if (!mUniformDeclarationBuffer.empty()) {
+  if (!mUniformDeclarationBuffer.empty())
+  {
     bool success = true;
-    for (Renderable *r : mRenderables) {
+    for (Renderable *r : mRenderables)
+    {
       ShaderProgram *program = r->material()->shaderProgram();
       success &= program && unbufferUniformDeclarations(program);
     }
@@ -61,7 +68,8 @@ void Scene::render() const {
   }
 
   ShaderDataManager &manager = ShaderDataManager::shaderDataManagerReference();
-  for (Renderable *r : mRenderables) {
+  for (Renderable *r : mRenderables)
+  {
     r->material()->useProgram();
 
     ShaderProgram *program = r->material()->shaderProgram();
@@ -83,25 +91,29 @@ void Scene::render() const {
     mAmbientLight.useAtLocation(lightLocation);
 
     lightLocation = manager.getUniformLocation(program, UniformType::POINT_LIGHTS);
-    for (PointLight *light : mPointLights) {
+    for (PointLight *light : mPointLights)
+    {
       light->useAtLocation(lightLocation);
       lightLocation += light->locationSize();
     }
 
     lightLocation = manager.getUniformLocation(program, UniformType::DIRECTIONAL_LIGHTS);
-    for (DirectionalLight *light : mDirectionalLights) {
+    for (DirectionalLight *light : mDirectionalLights)
+    {
       light->useAtLocation(lightLocation);
       lightLocation += light->locationSize();
     }
 
     lightLocation = manager.getUniformLocation(program, UniformType::SPOT_LIGHTS);
-    for (SpotLight *light : mSpotLights) {
+    for (SpotLight *light : mSpotLights)
+    {
       light->useAtLocation(lightLocation);
       lightLocation += light->locationSize();
     }
 
     Texture *texture = r->material()->texture();
-    if (texture) {
+    if (texture)
+    {
       GLint textureUnit = program->textureUnit();
       GLint textureLocation = manager.getUniformLocation(program, UniformType::TEXTURE);
       glActiveTexture(textureUnit);
@@ -113,7 +125,8 @@ void Scene::render() const {
   }
 }
 
-bool Scene::unbufferUniformDeclarations(ShaderProgram *shaderProgram) const {
+bool Scene::unbufferUniformDeclarations(ShaderProgram *shaderProgram) const
+{
   if (mUniformDeclarationBuffer.empty())
     return true;
 
@@ -121,7 +134,8 @@ bool Scene::unbufferUniformDeclarations(ShaderProgram *shaderProgram) const {
     return false;
 
   ShaderDataManager &manager = ShaderDataManager::shaderDataManagerReference();
-  for (UniformType &uniform : mUniformDeclarationBuffer) {
+  for (UniformType &uniform : mUniformDeclarationBuffer)
+  {
     if (!manager.declareUniform(shaderProgram, uniform))
       return false;
   }
@@ -129,7 +143,8 @@ bool Scene::unbufferUniformDeclarations(ShaderProgram *shaderProgram) const {
   return true;
 }
 
-void Scene::setupGL() const {
+void Scene::setupGL() const
+{
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
 

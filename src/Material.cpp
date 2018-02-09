@@ -7,12 +7,14 @@
 #include <assert.h>
 #include <iostream>
 
-Material::Material() :
-  mShaderProgram(NULL),
-  mTexture(NULL),
-  mUniformDeclarationBuffer() {}
+Material::Material()
+  : mShaderProgram(NULL)
+  , mTexture(NULL)
+  , mUniformDeclarationBuffer()
+{}
 
-void Material::useProgram() const {
+void Material::useProgram() const
+{
   assert(mShaderProgram);
   if (!mShaderProgram) {
     std::cerr << "Material::useProgram: Missing shader program." << std::endl;
@@ -26,14 +28,16 @@ void Material::useProgram() const {
   glUseProgram(mShaderProgram->name());
 }
 
-bool Material::unbufferUniformDeclarations() const {
+bool Material::unbufferUniformDeclarations() const
+{
   if (mUniformDeclarationBuffer.empty())
     return true;
 
   if (!mShaderProgram)
     return false;
 
-  for (UniformType &u : mUniformDeclarationBuffer) {
+  for (UniformType &u : mUniformDeclarationBuffer)
+  {
     if (!ShaderDataManager::shaderDataManagerReference().declareUniform(mShaderProgram, u))
       return false;
   }

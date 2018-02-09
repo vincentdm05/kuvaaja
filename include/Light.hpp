@@ -3,7 +3,8 @@
 
 #include "Common.hpp"
 
-class Light {
+class Light
+{
 public:
   Light();
   Light(float r, float g, float b, float intensity);
@@ -11,7 +12,8 @@ public:
 
   void setEnabled(bool enabled) { mEnabled = enabled; }
   void setIntensity(float intensity) { mColorAndIntensity[3] = intensity; }
-  void setColor(const glm::vec3 &color) {
+  void setColor(const glm::vec3 &color)
+  {
     mColorAndIntensity[0] = color[0];
     mColorAndIntensity[1] = color[1];
     mColorAndIntensity[2] = color[2];

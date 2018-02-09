@@ -5,7 +5,8 @@
 
 #include "Light.hpp"
 
-class PointLight : public Light {
+class PointLight : public Light
+{
 public:
   PointLight();
   ~PointLight() {}

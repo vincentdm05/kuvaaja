@@ -5,7 +5,8 @@
 
 #include <string>
 
-class Texture {
+class Texture
+{
 public:
   Texture();
   ~Texture() {}

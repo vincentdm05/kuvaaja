@@ -5,7 +5,8 @@
 
 #include "Light.hpp"
 
-class DirectionalLight : public Light {
+class DirectionalLight : public Light
+{
 public:
   DirectionalLight();
   ~DirectionalLight() {}
@@ -16,9 +17,7 @@ public:
   const glm::vec4 &direction() { return mDirection; }
 
   virtual void useAtLocation(GLuint location) const;
-  inline virtual size_t locationSize() const {
-    return Light::locationSize() + 1;
-  }
+  inline virtual size_t locationSize() const { return Light::locationSize() + 1; }
 
 private:
   glm::vec4 mDirection;

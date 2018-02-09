@@ -5,7 +5,8 @@
 
 #include <iostream>
 
-void printOpenGlErrors() {
+void printOpenGlErrors()
+{
   GLenum err_code = glGetError();
   while( GL_NO_ERROR != err_code )
   {
