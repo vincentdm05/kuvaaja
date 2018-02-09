@@ -11,7 +11,8 @@
 
 class ShaderProgram;
 
-class ShaderDataManager {
+class ShaderDataManager
+{
 public:
   static ShaderDataManager &shaderDataManagerReference();
 
@@ -33,13 +34,15 @@ private:
   GLuint mUniformBufferObjectBlockIndex;
   GLuint mUniformBufferBindingPoint;
 
-  struct Uniform {
+  struct Uniform
+  {
     Uniform(GLint l, UniformType t, const std::string &n)
       : location(l)
       , type(t)
       , name(n)
     {}
-    bool operator==(const Uniform &other) {
+    bool operator==(const Uniform &other)
+    {
       // A Uniform is uniquely identified by its name
       return name == other.name;
     }

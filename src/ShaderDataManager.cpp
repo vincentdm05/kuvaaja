@@ -7,13 +7,16 @@
 
 GLuint ShaderDataManager::cUboBindingPoints = 0;
 
-ShaderDataManager &ShaderDataManager::shaderDataManagerReference() {
+ShaderDataManager &ShaderDataManager::shaderDataManagerReference()
+{
   static ShaderDataManager manager;
   return manager;
 }
 
-bool ShaderDataManager::declareUniform(ShaderProgram *shaderProgram, UniformType uniformType) {
-  switch (uniformType) {
+bool ShaderDataManager::declareUniform(ShaderProgram *shaderProgram, UniformType uniformType)
+{
+  switch (uniformType)
+  {
   case MAT_MODEL_VIEW_PROJECTION:
     return declareUniform(shaderProgram, uniformType, "modelViewProjection");
   case MAT_INVERSE_TRANSPOSE_MODEL:
@@ -34,18 +37,21 @@ bool ShaderDataManager::declareUniform(ShaderProgram *shaderProgram, UniformType
   }
 }
 
-bool ShaderDataManager::declareUniformBuffer(ShaderProgram *shaderProgram, const std::string &uniformBufferName) {
+bool ShaderDataManager::declareUniformBuffer(ShaderProgram *shaderProgram, const std::string &uniformBufferName)
+{
   // TODO: generalise for any number of ubos
   initUbo(shaderProgram->name(), uniformBufferName, mUniformBufferObjectName, mUniformBufferObjectBlockIndex, mUniformBufferBindingPoint);
   return glIsBuffer(mUniformBufferObjectName) == GL_TRUE && mUniformBufferObjectBlockIndex != GL_INVALID_INDEX;
 }
 
-GLint ShaderDataManager::getUniformLocation(ShaderProgram *shaderProgram, UniformType uType) {
+GLint ShaderDataManager::getUniformLocation(ShaderProgram *shaderProgram, UniformType uType)
+{
   std::vector<Uniform> &programLocations = mUniformLocations[shaderProgram];
   if (programLocations.empty())
     return -1;
 
-  auto compFunc = [&uType](const Uniform &uniform) {
+  auto compFunc = [&uType](const Uniform &uniform)
+  {
     return uniform.type == uType;
   };
 
@@ -56,18 +62,21 @@ GLint ShaderDataManager::getUniformLocation(ShaderProgram *shaderProgram, Unifor
   return it->location;
 }
 
-ShaderDataManager::ShaderDataManager() :
-  mUboDirty(true),
-  mUniformBufferObjectName(0),
-  mUniformBufferObjectBlockIndex(0),
-  mUniformBufferBindingPoint(0),
-  mUniformLocations() {}
+ShaderDataManager::ShaderDataManager()
+  : mUboDirty(true)
+  , mUniformBufferObjectName(0)
+  , mUniformBufferObjectBlockIndex(0)
+  , mUniformBufferBindingPoint(0)
+  , mUniformLocations()
+{}
 
-ShaderDataManager::~ShaderDataManager() {
+ShaderDataManager::~ShaderDataManager()
+{
   mUniformLocations.clear();
 }
 
-bool ShaderDataManager::declareUniform(ShaderProgram *shaderProgram, UniformType uniformType, const std::string &uniformName) {
+bool ShaderDataManager::declareUniform(ShaderProgram *shaderProgram, UniformType uniformType, const std::string &uniformName)
+{
   assert(shaderProgram);
   if (!shaderProgram)
     return false;
@@ -82,7 +91,8 @@ bool ShaderDataManager::declareUniform(ShaderProgram *shaderProgram, UniformType
   return location >= 0;
 }
 
-void ShaderDataManager::initUbo(GLuint shaderProgramName, const std::string &uniformBufferName, GLuint &uboName, GLuint &uboBlockIndex, GLuint &uboBindingPoint) {
+void ShaderDataManager::initUbo(GLuint shaderProgramName, const std::string &uniformBufferName, GLuint &uboName, GLuint &uboBlockIndex, GLuint &uboBindingPoint)
+{
   glGenBuffers(1, &uboName);
   glBindBuffer(GL_UNIFORM_BUFFER, uboName);
   glBufferData(GL_UNIFORM_BUFFER, sizeof(ShaderLights), NULL, GL_DYNAMIC_DRAW);

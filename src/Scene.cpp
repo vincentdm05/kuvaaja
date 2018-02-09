@@ -30,7 +30,8 @@ void Scene::setAmbientLight(float r, float g, float b, float intensity)
   mUniformDeclarationBuffer.push_back(UniformType::AMBIENT_LIGHT);
 }
 
-void Scene::addDirectionalLight(DirectionalLight *directionalLight) {
+void Scene::addDirectionalLight(DirectionalLight *directionalLight)
+{
   mDirectionalLights.push_back(directionalLight);
   mUniformDeclarationBuffer.push_back(UniformType::DIRECTIONAL_LIGHTS);
 }

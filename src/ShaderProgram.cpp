@@ -65,7 +65,8 @@ bool ShaderProgram::setShader(const std::string &shaderPath, ShaderType shaderTy
   return true;
 }
 
-GLuint ShaderProgram::name() {
+GLuint ShaderProgram::name()
+{
   if (!mProgramName)
     linkShaders();
   return mProgramName;

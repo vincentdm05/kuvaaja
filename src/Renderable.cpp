@@ -95,7 +95,8 @@ bool Renderable::unbufferUniformDeclarations() const
   if (!program)
     return false;
 
-  for (UniformType &u : mUniformDeclarationBuffer) {
+  for (UniformType &u : mUniformDeclarationBuffer)
+  {
     if (!ShaderDataManager::shaderDataManagerReference().declareUniform(program, u))
       return false;
   }

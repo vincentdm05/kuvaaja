@@ -16,12 +16,14 @@ Material::Material()
 void Material::useProgram() const
 {
   assert(mShaderProgram);
-  if (!mShaderProgram) {
+  if (!mShaderProgram)
+  {
     std::cerr << "Material::useProgram: Missing shader program." << std::endl;
     return;
   }
 
-  if (!unbufferUniformDeclarations()) {
+  if (!unbufferUniformDeclarations())
+  {
     std::cerr << "Material::useProgramm: unable to declare uniforms." << std::endl;
   }
 

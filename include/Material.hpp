@@ -17,7 +17,8 @@ public:
   ~Material() {}
 
   void setProgram(ShaderProgram *shaderProgram) { mShaderProgram = shaderProgram; }
-  void setTexture(Texture *texture) {
+  void setTexture(Texture *texture)
+  {
     mTexture = texture;
     mUniformDeclarationBuffer.push_back(UniformType::TEXTURE);
   }
