@@ -6,7 +6,6 @@
 #include "Material.hpp"
 #include "Renderable.hpp"
 #include "Scene.hpp"
-#include "ShaderDataManager.hpp"
 #include "ShaderProgram.hpp"
 #include "Texture.hpp"
 
