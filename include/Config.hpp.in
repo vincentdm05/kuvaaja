@@ -1,0 +1,17 @@
+#ifndef CONFIG_HPP
+#define CONFIG_HPP
+
+/* Disclaimer: this file is a template, do not include directly. Instead, include the generated .h file */
+
+#include <string>
+
+const std::string &getProjectRoot()
+{
+  static const std::string defaultDir(".");
+  static const std::string projectRoot("@CONFIG_PROJECT_ROOT@");
+  if (projectRoot.empty())
+    return defaultDir;
+  return projectRoot;
+}
+
+#endif // CONFIG_HPP
