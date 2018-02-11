@@ -1,4 +1,5 @@
 #include "Camera.hpp"
+#include "Config.hpp"
 #include "Context.hpp"
 #include "Control.hpp"
 #include "Debug.hpp"
@@ -50,7 +51,7 @@ int main(int argc, char *argv[])
   scene.setCamera(&camera);
 
   // Create shaders
-  std::string shaderFolder = "shaders/";
+  std::string shaderFolder = getProjectRoot() + "/shaders/";
   ShaderProgram shaderProgram;
   shaderProgram.setShader(shaderFolder + "vertex.glsl", ShaderType::VERTEX);
   shaderProgram.setShader(shaderFolder + "fragment.glsl", ShaderType::FRAGMENT);
@@ -137,7 +138,7 @@ int main(int argc, char *argv[])
 
   Texture texture;
 //  texture.loadTestData();
-  texture.load("resources/images/img_test.png");
+  texture.load(getProjectRoot() + "/resources/images/img_test.png");
   cubeRenderable.material()->setTexture(&texture);
   const float cubeUvData[] =
   {

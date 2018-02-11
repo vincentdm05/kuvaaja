@@ -10,7 +10,11 @@ set(GLEW_VERSION "2.1.0")
 # Compile external libraries
 add_subdirectory(external/)
 
+set(CONFIG_PROJECT_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
+configure_file(include/Config.hpp.in ${CMAKE_CURRENT_SOURCE_DIR}/build/generated/Config.hpp)
+
 include_directories(
+  build/generated/
   external/glew-${GLEW_VERSION}/include/
   external/glfw/include/
   external/glm/
