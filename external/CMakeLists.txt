@@ -3,8 +3,6 @@ add_definitions(
   -DGLEW_STATIC
 )
 
-set(GLEW_VERSION 2.1.0)
-
 include_directories(
   glfw/include/GLFW/
   glew-${GLEW_VERSION}/include/

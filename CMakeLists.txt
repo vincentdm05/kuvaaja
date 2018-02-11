@@ -4,6 +4,9 @@ project(kuvaaja)
 # Compile with C++11
 set (CMAKE_CXX_STANDARD 11)
 
+# Glew
+set(GLEW_VERSION "2.1.0")
+
 # Compile external libraries
 add_subdirectory(external/)
 
