@@ -5,6 +5,9 @@
 #include "Debug.hpp"
 #include "DirectionalLight.hpp"
 #include "Material.hpp"
+#include "model/Box.hpp"
+#include "model/Triangle.hpp"
+#include "model/Quad.hpp"
 #include "Renderable.hpp"
 #include "Scene.hpp"
 #include "ShaderProgram.hpp"
@@ -67,159 +70,53 @@ int main(int argc, char *argv[])
   // Create materials
   Material cubeMaterial;
   cubeMaterial.setProgram(&shaderProgram);
-  Material triangleMaterial;
-  triangleMaterial.setProgram(&shaderProgram);
-
-  // Cube
-  Renderable cubeRenderable;
-  cubeRenderable.setMaterial(&cubeMaterial);
-  scene.addRenderable(&cubeRenderable);
-
-  const float cubeTriangleData[] =
-  {
-    -1.0f, -1.0f, -1.0f,
-    -1.0f, -1.0f, 1.0f,
-    -1.0f, 1.0f, 1.0f,
-    1.0f, 1.0f, -1.0f,
-    -1.0f, -1.0f, -1.0f,
-    -1.0f, 1.0f, -1.0f,
-    1.0f, -1.0f, 1.0f,
-    -1.0f, -1.0f, -1.0f,
-    1.0f, -1.0f, -1.0f,
-    1.0f, 1.0f, -1.0f,
-    1.0f, -1.0f, -1.0f,
-    -1.0f, -1.0f, -1.0f,
-    -1.0f, -1.0f, -1.0f,
-    -1.0f, 1.0f, 1.0f,
-    -1.0f, 1.0f, -1.0f,
-    1.0f, -1.0f, 1.0f,
-    -1.0f, -1.0f, 1.0f,
-    -1.0f, -1.0f, -1.0f,
-    -1.0f, 1.0f, 1.0f,
-    -1.0f, -1.0f, 1.0f,
-    1.0f, -1.0f, 1.0f,
-    1.0f, 1.0f, 1.0f,
-    1.0f, -1.0f, -1.0f,
-    1.0f, 1.0f, -1.0f,
-    1.0f, -1.0f, -1.0f,
-    1.0f, 1.0f, 1.0f,
-    1.0f, -1.0f, 1.0f,
-    1.0f, 1.0f, 1.0f,
-    1.0f, 1.0f, -1.0f,
-    -1.0f, 1.0f, -1.0f,
-    1.0f, 1.0f, 1.0f,
-    -1.0f, 1.0f, -1.0f,
-    -1.0f, 1.0f, 1.0f,
-    1.0f, 1.0f, 1.0f,
-    -1.0f, 1.0f, 1.0f,
-    1.0f, -1.0f, 1.0f
-  };
-  const unsigned int nCubeVertices = sizeof(cubeTriangleData) / (3 * sizeof(float));
-  cubeRenderable.setVertexData(cubeTriangleData, nCubeVertices);
-  cubeRenderable.scale(0.75f, 0.75f, 0.75f);
-
-  // TODO: compute actual normal
-  std::vector<glm::vec3> cubeNormals;
-  for (int i = 0; i < nCubeVertices; i++)
-  {
-    glm::vec3 normal = -glm::normalize(glm::vec3(cubeTriangleData[3 * i], cubeTriangleData[3 * i + 1], cubeTriangleData[3 * i + 2]));
-    cubeNormals.push_back(normal);
-  }
-  cubeRenderable.setNormalData(cubeNormals);
-
-  static float cubeColorData[nCubeVertices * 3];
-  for (int i = 0; i < nCubeVertices; i++)
-  {
-    cubeColorData[i * 3] = (cubeTriangleData[i * 3] + 1) / 2.0f;
-    cubeColorData[i * 3 + 1] = (cubeTriangleData[i * 3 + 1] + 1) / 2.0f;
-    cubeColorData[i * 3 + 2] = (cubeTriangleData[i * 3 + 2] + 1) / 2.0f;
-  }
-  cubeRenderable.setColorData(cubeColorData, nCubeVertices);
-
+  Material texturedMaterial;
+  texturedMaterial.setProgram(&shaderProgram);
   Texture texture;
 //  texture.loadTestData();
   texture.load(getProjectRoot() + "/resources/images/img_test.png");
-  cubeRenderable.material()->setTexture(&texture);
-  const float cubeUvData[] =
+  texturedMaterial.setTexture(&texture);
+  Material triangleMaterial;
+  triangleMaterial.setProgram(&shaderProgram);
+
+  // Create models
+  model::Box boxModel;
+  model::Triangle triangleModel;
+  model::Quad quadModel;
+
+  Renderable cube;
+  cube.setMaterial(&cubeMaterial);
+  cube.setModel(&boxModel);
+  cube.translate(0, 3, 2);
+  scene.addRenderable(&cube);
+
+  Renderable anotherCube;
+  anotherCube.setMaterial(&texturedMaterial);
+  anotherCube.setModel(&boxModel);
+  anotherCube.translate(0, 0, -2);
+  scene.addRenderable(&anotherCube);
+
+  size_t nMoreCubes = 1000;
+  Renderable moreCubes[nMoreCubes];
+  for (size_t i = 0; i < nMoreCubes; i++)
   {
-    1.0f, 0.0f, // -1.0f, -1.0f, -1.0f,
-    0.0f, 0.0f, // -1.0f, -1.0f, 1.0f,
-    0.0f, 1.0f, // -1.0f, 1.0f, 1.0f,
-    1.0f, 1.0f, // 1.0f, 1.0f, -1.0f,
-    0.0f, 0.0f, // -1.0f, -1.0f, -1.0f,
-    0.0f, 1.0f, // -1.0f, 1.0f, -1.0f,
-    1.0f, 0.0f, // 1.0f, -1.0f, 1.0f,
-    0.0f, 1.0f, // -1.0f, -1.0f, -1.0f,
-    1.0f, 1.0f, // 1.0f, -1.0f, -1.0f,
-    1.0f, 1.0f, // 1.0f, 1.0f, -1.0f,
-    1.0f, 0.0f, // 1.0f, -1.0f, -1.0f,
-    0.0f, 0.0f, // -1.0f, -1.0f, -1.0f,
-    1.0f, 0.0f, // -1.0f, -1.0f, -1.0f,
-    0.0f, 1.0f, // -1.0f, 1.0f, 1.0f,
-    1.0f, 1.0f, // -1.0f, 1.0f, -1.0f,
-    1.0f, 0.0f, // 1.0f, -1.0f, 1.0f,
-    0.0f, 0.0f, // -1.0f, -1.0f, 1.0f,
-    0.0f, 1.0f, // -1.0f, -1.0f, -1.0f,
-    1.0f, 1.0f, // -1.0f, 1.0f, 1.0f,
-    1.0f, 0.0f, // -1.0f, -1.0f, 1.0f,
-    0.0f, 0.0f, // 1.0f, -1.0f, 1.0f,
-    1.0f, 1.0f, // 1.0f, 1.0f, 1.0f,
-    0.0f, 0.0f, // 1.0f, -1.0f, -1.0f,
-    0.0f, 1.0f, // 1.0f, 1.0f, -1.0f,
-    0.0f, 0.0f, // 1.0f, -1.0f, -1.0f,
-    1.0f, 1.0f, // 1.0f, 1.0f, 1.0f,
-    1.0f, 0.0f, // 1.0f, -1.0f, 1.0f,
-    1.0f, 1.0f, // 1.0f, 1.0f, 1.0f,
-    1.0f, 0.0f, // 1.0f, 1.0f, -1.0f,
-    0.0f, 0.0f, // -1.0f, 1.0f, -1.0f,
-    1.0f, 1.0f, // 1.0f, 1.0f, 1.0f,
-    0.0f, 0.0f, // -1.0f, 1.0f, -1.0f,
-    0.0f, 1.0f, // -1.0f, 1.0f, 1.0f,
-    0.0f, 1.0f, // 1.0f, 1.0f, 1.0f,
-    1.0f, 1.0f, // -1.0f, 1.0f, 1.0f,
-    0.0f, 0.0f, // 1.0f, -1.0f, 1.0f
-  };
-  cubeRenderable.setUvData(cubeUvData, nCubeVertices);
+    moreCubes[i].setMaterial(&cubeMaterial);
+    moreCubes[i].setModel(&boxModel);
+    moreCubes[i].translate(20 * sin(i * 2 * 3.14159265359 / nMoreCubes), 2 * sin(4 * i * 2 * 3.14159265359 / nMoreCubes), 20 * cos(i * 2 * 3.14159265359 / nMoreCubes));
+    moreCubes[i].rotate(i * 2 * 3.14159265359 / nMoreCubes, 0, 1, 1);
+    scene.addRenderable(&moreCubes[i]);
+  }
 
-  // Single triangle
-  Renderable triangleRenderable;
-  triangleRenderable.setMaterial(&triangleMaterial);
-  scene.addRenderable(&triangleRenderable);
+  Renderable triangle;
+  triangle.setMaterial(&triangleMaterial);
+  triangle.setModel(&triangleModel);
+  scene.addRenderable(&triangle);
 
-  const float triangleData[] =
-  {
-    -1.0f, -1.0f, 0.0f,
-    1.0f, -1.0f, 0.0f,
-    0.0f, 1.0f, 0.0f
-  };
-  const unsigned int nTriangleVertices = sizeof(triangleData) / (3 * sizeof(float));
-  triangleRenderable.setVertexData(triangleData, nTriangleVertices);
-  triangleRenderable.rotate(1.2f, 0.0f, 1.0f, 0.0);
-  triangleRenderable.scale(3.0f, 3.0f, 1.0f);
-
-  std::vector<glm::vec3> triangleNormalData;
-  for (int i = 0; i < nTriangleVertices; i++)
-    triangleNormalData.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-  triangleRenderable.setNormalData(triangleNormalData);
-
-  const float triangleColorData[] =
-  {
-    1.0f, 0.0f, 0.0f,
-    0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 1.0f
-  };
-  triangleRenderable.setColorData(triangleColorData, nTriangleVertices);
-
-  const float triangleUvData[] =
-  {
-    0.0f, 0.0f,
-    1.0f, 0.0f,
-    0.5f, 1.0f
-  };
-  triangleRenderable.setUvData(triangleUvData, nTriangleVertices);
-  Texture triangleTexture;
-  triangleTexture.loadTestData();
-  triangleRenderable.material()->setTexture(&triangleTexture);
+  Renderable quad;
+  quad.setMaterial(&triangleMaterial);
+  quad.setModel(&quadModel);
+  scene.addRenderable(&quad);
+  quad.translate(-3, 0, -4);
 
   // Generic controls
   Control control;
@@ -253,8 +150,7 @@ int main(int argc, char *argv[])
       }
     }
 
-    cubeRenderable.rotate(deltaTime, 1.0f, 1.0f, 0.0f);
-//    triangleRenderable.rotate(deltaTime, 0.0f, 1.0f, 0.0f);
+    cube.rotate(deltaTime, 1.0f, 1.0f, 0.0f);
 
     context->render();
   }

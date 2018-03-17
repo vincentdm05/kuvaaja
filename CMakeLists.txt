@@ -20,6 +20,7 @@ include_directories(
   external/glm/
   external/soil/src/
   include/
+  include/model/
 )
 
 set(ALL_LIBS
@@ -32,7 +33,8 @@ set(ALL_LIBS
 # Specify output binary directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/)
 
-aux_source_directory(src/ SRC_LIST)
+#aux_source_directory(src/ SRC_LIST)
+file(GLOB_RECURSE SRC_LIST src/*.cpp)
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 
 target_link_libraries(${PROJECT_NAME} ${ALL_LIBS})

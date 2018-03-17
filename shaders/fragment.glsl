@@ -67,6 +67,10 @@ void main() {
       continue;
   }
 
-  color *= texture(textureSampler, texUV).rgb;
+  // TODO: use permutation
+  vec3 texture = texture(textureSampler, texUV).rgb;
+  if (texture != vec3(0))
+    color *= texture;
+
   color *= fragmentColor;
 }

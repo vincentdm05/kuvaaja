@@ -1,9 +1,11 @@
 #include "Renderable.hpp"
 
 #include "Material.hpp"
+#include "model/Model.hpp"
 
 Renderable::Renderable()
   : mVertexArrayName(0)
+  , mIndexBufferName(0)
   , mVertexBufferName(0)
   , mNormalBufferName(0)
   , mColorBufferName(0)
@@ -16,6 +18,7 @@ Renderable::Renderable()
 
 Renderable::~Renderable()
 {
+  glDeleteBuffers(1, &mIndexBufferName);
   glDeleteBuffers(1, &mVertexBufferName);
   glDeleteBuffers(1, &mNormalBufferName);
   glDeleteBuffers(1, &mColorBufferName);
@@ -23,8 +26,24 @@ Renderable::~Renderable()
   glDeleteVertexArrays(1, &mVertexArrayName);
 }
 
+void Renderable::setModel(model::Model *model)
+{
+  mVertexCount = model->vertexCount();
+  if (model->verticesIndexed())
+    setVaoIndices(model->indices());
+  else
+    mIndexBufferName = 0;
+  setVaoData(model->vertices(), mVertexBufferName);
+  setVaoData(model->normals(), mNormalBufferName);
+  setVaoData(model->vertexColors(), mColorBufferName);
+  setVaoData(model->uvs(), mUvBufferName);
+}
+
 void Renderable::render() const
 {
+  if (mVertexArrayName == 0)
+    return;
+
   glBindVertexArray(mVertexArrayName);
 
   // Draw data
@@ -54,7 +73,16 @@ void Renderable::render() const
     glVertexAttribPointer(attribArrayNumber, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
   }
 
-  glDrawArrays(GL_TRIANGLES, 0, mVertexCount);
+  if (mIndexBufferName != 0)
+  {
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferName);
+    glDrawElements(GL_TRIANGLES, mVertexCount, GL_UNSIGNED_INT, (void*)0);
+  }
+  else
+  {
+    glDrawArrays(GL_TRIANGLES, 0, mVertexCount);
+  }
+
   glDisableVertexAttribArray(0);
 
   glBindVertexArray(0);
@@ -74,16 +102,16 @@ void Renderable::setVaoData(const GLfloat *data, GLuint &bufferName, unsigned in
   glBindVertexArray(0);
 }
 
-void Renderable::setVaoData(const std::vector<glm::vec3> &data, GLuint &bufferName)
+void Renderable::setVaoIndices(const std::vector<unsigned int> &indices)
 {
   glBindVertexArray(mVertexArrayName);
 
-  if (glIsBuffer(bufferName) == GL_TRUE)
-    glDeleteBuffers(1, &bufferName);
+  if (glIsBuffer(mIndexBufferName) == GL_TRUE)
+    glDeleteBuffers(1, &mIndexBufferName);
 
-  glGenBuffers(1, &bufferName);
-  glBindBuffer(GL_ARRAY_BUFFER, bufferName);
-  glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(glm::vec3), &data[0], GL_STATIC_DRAW);
+  glGenBuffers(1, &mIndexBufferName);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferName);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
   glBindVertexArray(0);
 }
