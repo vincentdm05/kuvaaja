@@ -97,6 +97,9 @@ void Scene::render() const
     }
 
     r->render();
+
+    if (texture)
+      glBindTexture(GL_TEXTURE_2D, 0);
   }
 }
 
