@@ -1,8 +1,6 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 
-/* Disclaimer: this file is a template, do not include directly. Instead, include the generated .h file */
-
 #include <string>
 
 const std::string &getProjectRoot()
