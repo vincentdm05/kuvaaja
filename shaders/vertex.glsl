@@ -13,7 +13,6 @@ uniform mat4 modelViewProjection;
 uniform mat4 inverseTransposeModel;
 
 void main() {
-  // TODO: get correct transform for normals
   fragmentNormal = (inverseTransposeModel * vec4(vertexNormal, 0.0)).xyz;
   fragmentColor = vertexColor;
   texUV = vertexUV;

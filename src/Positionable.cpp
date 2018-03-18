@@ -1,7 +1,7 @@
 #include "Positionable.hpp"
 
 Positionable::Positionable()
-  : mIsTransformDirty(false)
+  : mIsTransformDirty(true)
   , mTransform(glm::mat4(1.0f))
   , mScaling(glm::mat4(1.0f))
   , mRotation(glm::mat4(1.0f))
