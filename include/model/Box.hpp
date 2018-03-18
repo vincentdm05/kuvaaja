@@ -16,7 +16,7 @@ protected:
   Box *makeBlueprint() override;
 
 private:
-  Box(unsigned int vertexCount); // Blueprint ctr
+  Box(unsigned int vertexCount, unsigned int indexCount); // Blueprint ctr
 
   static const std::string cClassName;
   static unsigned int cNumInstances;

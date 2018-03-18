@@ -20,11 +20,11 @@ Quad::~Quad()
 
 Quad *Quad::makeBlueprint()
 {
-  return new Quad(6);
+  return new Quad(4, 6);
 }
 
-Quad::Quad(unsigned int vertexCount)
-  : Model(vertexCount)
+Quad::Quad(unsigned int vertexCount, unsigned int indexCount)
+  : Model(vertexCount, indexCount)
 {
   glm::vec3 normal(0.0f, 0.0f, 1.0f);
 

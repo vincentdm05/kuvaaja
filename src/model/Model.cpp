@@ -5,28 +5,25 @@ namespace model {
 Model::Blueprints Model::cBlueprints;
 
 Model::Model()
-  : mVertexCount(0)
-  , mIndices(nullptr)
+  : mIndices(nullptr)
   , mVertices(nullptr)
   , mNormals(nullptr)
   , mVertexColors(nullptr)
   , mUVs(nullptr)
-{
-}
+{}
 
-Model::Model(unsigned int count)
-  : mVertexCount(count)
+Model::Model(unsigned int vertexCount, unsigned int indexCount)
 {
   mIndices = new std::vector<unsigned int>();
-  mIndices->reserve(mVertexCount);
+  mIndices->reserve(indexCount);
   mVertices = new std::vector<glm::vec3>();
-  mVertices->reserve(mVertexCount);
+  mVertices->reserve(vertexCount);
   mNormals = new std::vector<glm::vec3>();
-  mNormals->reserve(mVertexCount);
+  mNormals->reserve(vertexCount);
   mVertexColors = new std::vector<glm::vec3>();
-  mVertexColors->reserve(mVertexCount);
+  mVertexColors->reserve(vertexCount);
   mUVs = new std::vector<glm::vec2>();
-  mUVs->reserve(mVertexCount);
+  mUVs->reserve(vertexCount);
 }
 
 Model &Model::getBlueprint()
@@ -41,7 +38,6 @@ Model &Model::getBlueprint()
 void Model::initBlueprint()
 {
   Model &blueprint = getBlueprint();
-  mVertexCount = blueprint.vertexCount();
   mIndices = blueprint.mIndices;
   mVertices = blueprint.mVertices;
   mNormals = blueprint.mNormals;
@@ -81,8 +77,6 @@ void Model::deleteBlueprint()
   mNormals = nullptr;
   mVertexColors = nullptr;
   mUVs = nullptr;
-
-  mVertexCount = 0;
 }
 
 } // namespace model

@@ -10,8 +10,8 @@ Renderable::Renderable()
   , mNormalBufferName(0)
   , mColorBufferName(0)
   , mUvBufferName(0)
-  , mMaterial(NULL)
-  , mVertexCount(0)
+  , mMaterial(nullptr)
+  , mModel(nullptr)
 {
   glGenVertexArrays(1, &mVertexArrayName);
 }
@@ -28,20 +28,23 @@ Renderable::~Renderable()
 
 void Renderable::setModel(model::Model *model)
 {
-  mVertexCount = model->vertexCount();
-  if (model->verticesIndexed())
-    setVaoIndices(model->indices());
-  else
-    mIndexBufferName = 0;
-  setVaoData(model->vertices(), mVertexBufferName);
-  setVaoData(model->normals(), mNormalBufferName);
-  setVaoData(model->vertexColors(), mColorBufferName);
-  setVaoData(model->uvs(), mUvBufferName);
+  mModel = model;
+  setVaoIndices(mModel->indices());
+  setVaoData(mModel->vertices(), mVertexBufferName);
+  setVaoData(mModel->normals(), mNormalBufferName);
+  setVaoData(mModel->vertexColors(), mColorBufferName);
+  setVaoData(mModel->uvs(), mUvBufferName);
 }
 
 void Renderable::render() const
 {
   if (mVertexArrayName == 0)
+    return;
+
+  if (!mMaterial)
+    return;
+
+  if (!mModel || mModel->vertexCount() == 0)
     return;
 
   glBindVertexArray(mVertexArrayName);
@@ -76,11 +79,11 @@ void Renderable::render() const
   if (mIndexBufferName != 0)
   {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferName);
-    glDrawElements(GL_TRIANGLES, mVertexCount, GL_UNSIGNED_INT, (void*)0);
+    glDrawElements(GL_TRIANGLES, mModel->indexCount(), GL_UNSIGNED_INT, (void*)0);
   }
   else
   {
-    glDrawArrays(GL_TRIANGLES, 0, mVertexCount);
+    glDrawArrays(GL_TRIANGLES, 0, mModel->vertexCount());
   }
 
   glDisableVertexAttribArray(0);
@@ -88,30 +91,35 @@ void Renderable::render() const
   glBindVertexArray(0);
 }
 
-void Renderable::setVaoData(const GLfloat *data, GLuint &bufferName, unsigned int count, unsigned int cardinality)
+void Renderable::deleteBuffer(GLuint &bufferName)
 {
-  glBindVertexArray(mVertexArrayName);
-
   if (glIsBuffer(bufferName) == GL_TRUE)
     glDeleteBuffers(1, &bufferName);
 
-  glGenBuffers(1, &bufferName);
-  glBindBuffer(GL_ARRAY_BUFFER, bufferName);
-  glBufferData(GL_ARRAY_BUFFER, count * cardinality * sizeof(GLfloat), data, GL_STATIC_DRAW);
+  bufferName = 0;
+}
 
-  glBindVertexArray(0);
+void Renderable::resetBuffer(GLuint &bufferName)
+{
+  deleteBuffer(bufferName);
+  glGenBuffers(1, &bufferName);
 }
 
 void Renderable::setVaoIndices(const std::vector<unsigned int> &indices)
 {
   glBindVertexArray(mVertexArrayName);
 
-  if (glIsBuffer(mIndexBufferName) == GL_TRUE)
-    glDeleteBuffers(1, &mIndexBufferName);
-
-  glGenBuffers(1, &mIndexBufferName);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferName);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+  if (indices.size() == 0)
+  {
+    deleteBuffer(mIndexBufferName);
+  }
+  else
+  {
+    resetBuffer(mIndexBufferName);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferName);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  }
 
   glBindVertexArray(0);
 }

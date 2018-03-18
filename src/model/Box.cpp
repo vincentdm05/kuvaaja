@@ -20,11 +20,11 @@ Box::~Box()
 
 Box *Box::makeBlueprint()
 {
-  return new Box(36);
+  return new Box(24, 36);
 }
 
-Box::Box(unsigned int vertexCount)
-  : Model(vertexCount)
+Box::Box(unsigned int vertexCount, unsigned int indexCount)
+  : Model(vertexCount, indexCount)
 {
   float l = 1.0f; // Side length
   l *= 0.5f; // Halve length to start from center

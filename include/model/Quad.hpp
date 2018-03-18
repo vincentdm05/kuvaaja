@@ -16,7 +16,7 @@ protected:
   Quad *makeBlueprint() override;
 
 private:
-  Quad(unsigned int vertexCount); // Blueprint ctr
+  Quad(unsigned int vertexCount, unsigned int indexCount); // Blueprint ctr
 
   static const std::string cClassName;
   static unsigned int cNumInstances;

@@ -12,8 +12,8 @@ namespace model {
 class Model
 {
 public:
-  unsigned int vertexCount() const { return mVertexCount; }
-  bool verticesIndexed() const { return mIndices && mIndices->size(); }
+  unsigned int vertexCount() const { return mVertices ? mVertices->size() : 0; }
+  unsigned int indexCount() const { return mIndices ? mIndices->size() : 0; }
   const std::vector<unsigned int> &indices() const { return *mIndices; }
   const std::vector<glm::vec3> &vertices() const { return *mVertices; }
   const std::vector<glm::vec3> &normals() const { return *mNormals; }
@@ -22,10 +22,9 @@ public:
 
 protected:
   Model();
-  Model(unsigned int count); // Blueprint ctr
+  Model(unsigned int vertexCount, unsigned int indexCount = 0); // Blueprint ctr
   virtual ~Model() {}
 
-  unsigned int mVertexCount;
   std::vector<unsigned int> *mIndices;
   std::vector<glm::vec3> *mVertices;
   std::vector<glm::vec3> *mNormals;
