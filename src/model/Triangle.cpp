@@ -3,28 +3,24 @@
 namespace model {
 
 const std::string Triangle::cClassName = "Triangle";
-unsigned int Triangle::cNumInstances = 0;
 
 Triangle::Triangle()
 {
-  initBlueprint();
-  cNumInstances++;
+  acquireBlueprint();
 }
 
 Triangle::~Triangle()
 {
-  cNumInstances--;
-  if (cNumInstances == 1)
-    releaseBlueprint();
+  releaseBlueprint();
 }
 
-Triangle *Triangle::makeBlueprint()
+Triangle *Triangle::makeBlueprint() const
 {
   return new Triangle(3);
 }
 
 Triangle::Triangle(unsigned int vertexCount)
-  : Model(vertexCount)
+  : PrimitiveModel(vertexCount)
 {
   float twoPiOver3 = 3.14159265359f * 2.0f / 3.0f;
   float cosPiOver3 = cos(twoPiOver3);
@@ -47,8 +43,6 @@ Triangle::Triangle(unsigned int vertexCount)
 
     direction = rot * direction;
   }
-
-  cNumInstances++;
 }
 
 } // namespace model

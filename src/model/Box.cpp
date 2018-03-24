@@ -3,28 +3,24 @@
 namespace model {
 
 const std::string Box::cClassName = "Box";
-unsigned int Box::cNumInstances = 0;
 
 Box::Box()
 {
-  initBlueprint();
-  cNumInstances++;
+  acquireBlueprint();
 }
 
 Box::~Box()
 {
-  cNumInstances--;
-  if (cNumInstances == 1)
-    releaseBlueprint();
+  releaseBlueprint();
 }
 
-Box *Box::makeBlueprint()
+Box *Box::makeBlueprint() const
 {
   return new Box(24, 36);
 }
 
 Box::Box(unsigned int vertexCount, unsigned int indexCount)
-  : Model(vertexCount, indexCount)
+  : PrimitiveModel(vertexCount, indexCount)
 {
   float l = 1.0f; // Side length
   l *= 0.5f; // Halve length to start from center
@@ -122,8 +118,6 @@ Box::Box(unsigned int vertexCount, unsigned int indexCount)
 
     vertexIndex = vertexBRIndex + 1;
   }
-
-  cNumInstances++;
 }
 
 } // namespace model

@@ -1,11 +1,11 @@
 #ifndef QUAD_HPP
 #define QUAD_HPP
 
-#include "Model.hpp"
+#include "PrimitiveModel.hpp"
 
 namespace model {
 
-class Quad : public Model
+class Quad : public PrimitiveModel
 {
 public:
   Quad();
@@ -13,13 +13,12 @@ public:
 
 protected:
   const std::string &modelName() const override { return cClassName; }
-  Quad *makeBlueprint() override;
+  Quad *makeBlueprint() const override;
 
 private:
   Quad(unsigned int vertexCount, unsigned int indexCount); // Blueprint ctr
 
   static const std::string cClassName;
-  static unsigned int cNumInstances;
 };
 
 } // namespace model

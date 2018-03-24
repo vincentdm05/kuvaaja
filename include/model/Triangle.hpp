@@ -1,11 +1,11 @@
 #ifndef TRIANGLE_HPP
 #define TRIANGLE_HPP
 
-#include "Model.hpp"
+#include "PrimitiveModel.hpp"
 
 namespace model {
 
-class Triangle : public Model
+class Triangle : public PrimitiveModel
 {
 public:
   Triangle();
@@ -13,13 +13,12 @@ public:
 
 protected:
   const std::string &modelName() const override { return cClassName; }
-  Triangle *makeBlueprint() override;
+  Triangle *makeBlueprint() const override;
 
 private:
   Triangle(unsigned int vertexCount); // Blueprint ctr
 
   static const std::string cClassName;
-  static unsigned int cNumInstances;
 };
 
 } // namespace model

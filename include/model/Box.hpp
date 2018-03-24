@@ -1,11 +1,11 @@
 #ifndef BOX_HPP
 #define BOX_HPP
 
-#include "Model.hpp"
+#include "PrimitiveModel.hpp"
 
 namespace model {
 
-class Box : public Model
+class Box : public PrimitiveModel
 {
 public:
   Box();
@@ -13,13 +13,12 @@ public:
 
 protected:
   const std::string &modelName() const override { return cClassName; }
-  Box *makeBlueprint() override;
+  Box *makeBlueprint() const override;
 
 private:
   Box(unsigned int vertexCount, unsigned int indexCount); // Blueprint ctr
 
   static const std::string cClassName;
-  static unsigned int cNumInstances;
 };
 
 } // namespace model

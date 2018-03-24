@@ -3,8 +3,6 @@
 
 #include "Common.hpp"
 
-#include <map>
-#include <string>
 #include <vector>
 
 namespace model {
@@ -12,6 +10,9 @@ namespace model {
 class Model
 {
 public:
+  Model();
+  virtual ~Model();
+
   unsigned int vertexCount() const { return mVertices ? mVertices->size() : 0; }
   unsigned int indexCount() const { return mIndices ? mIndices->size() : 0; }
   const std::vector<unsigned int> &indices() const { return *mIndices; }
@@ -21,9 +22,8 @@ public:
   const std::vector<glm::vec2> &uvs() const { return *mUVs; }
 
 protected:
-  Model();
-  Model(unsigned int vertexCount, unsigned int indexCount = 0); // Blueprint ctr
-  virtual ~Model() {}
+  Model(bool initialise);
+  Model(unsigned int vertexCount, unsigned int indexCount);
 
   std::vector<unsigned int> *mIndices;
   std::vector<glm::vec3> *mVertices;
@@ -31,18 +31,8 @@ protected:
   std::vector<glm::vec3> *mVertexColors;
   std::vector<glm::vec2> *mUVs;
 
-  Model &getBlueprint();
-  void initBlueprint();
-  void releaseBlueprint();
-
-  virtual const std::string &modelName() const = 0;
-  virtual Model *makeBlueprint() = 0;
-  void deleteBlueprint();
-
 private:
-
-  typedef std::map<std::string, Model*> Blueprints;
-  static Blueprints cBlueprints;
+  void init();
 };
 
 } // namespace model

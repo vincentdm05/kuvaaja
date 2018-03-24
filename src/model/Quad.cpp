@@ -3,28 +3,24 @@
 namespace model {
 
 const std::string Quad::cClassName = "Quad";
-unsigned int Quad::cNumInstances = 0;
 
 Quad::Quad()
 {
-  initBlueprint();
-  cNumInstances++;
+  acquireBlueprint();
 }
 
 Quad::~Quad()
 {
-  cNumInstances--;
-  if (cNumInstances == 1)
-    releaseBlueprint();
+  releaseBlueprint();
 }
 
-Quad *Quad::makeBlueprint()
+Quad *Quad::makeBlueprint() const
 {
   return new Quad(4, 6);
 }
 
 Quad::Quad(unsigned int vertexCount, unsigned int indexCount)
-  : Model(vertexCount, indexCount)
+  : PrimitiveModel(vertexCount, indexCount)
 {
   glm::vec3 normal(0.0f, 0.0f, 1.0f);
 
@@ -65,8 +61,6 @@ Quad::Quad(unsigned int vertexCount, unsigned int indexCount)
   mNormals->push_back(normal);
   mVertexColors->push_back(glm::vec3(1.0f, 0.0f, 0.5));
   mUVs->push_back(glm::vec2(1.0f, 0.0f));
-
-  cNumInstances++;
 }
 
 } // namespace model
