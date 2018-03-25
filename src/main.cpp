@@ -261,9 +261,9 @@ int main(int argc, char *argv[])
   if (showFPS)
     std::cout << std::endl;
 
-  delete context;
-
   printOpenGlErrors();
+
+  delete context;
 
   return 0;
 }
