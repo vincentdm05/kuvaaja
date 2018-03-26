@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
   anotherCube.translate(0, 0, -2);
   scene.addRenderable(&anotherCube);
 
-  size_t nMoreCubes = 1000;
+  const size_t nMoreCubes = 1000;
   Renderable moreCubes[nMoreCubes];
   for (size_t i = 0; i < nMoreCubes; i++)
   {
