@@ -1,6 +1,7 @@
 #include "model/Triangle.hpp"
 
-namespace model {
+namespace model
+{
 
 const std::string Triangle::cClassName = "Triangle";
 
