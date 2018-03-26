@@ -5,7 +5,8 @@
 
 #include <vector>
 
-namespace model {
+namespace model
+{
 
 class Model
 {

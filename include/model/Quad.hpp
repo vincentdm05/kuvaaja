@@ -3,7 +3,8 @@
 
 #include "PrimitiveModel.hpp"
 
-namespace model {
+namespace model
+{
 
 class Quad : public PrimitiveModel
 {

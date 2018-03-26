@@ -3,7 +3,8 @@
 
 #include "PrimitiveModel.hpp"
 
-namespace model {
+namespace model
+{
 
 class Box : public PrimitiveModel
 {

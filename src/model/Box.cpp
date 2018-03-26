@@ -1,6 +1,7 @@
 #include "model/Box.hpp"
 
-namespace model {
+namespace model
+{
 
 const std::string Box::cClassName = "Box";
 

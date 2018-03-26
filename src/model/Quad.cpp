@@ -1,6 +1,7 @@
 #include "model/Quad.hpp"
 
-namespace model {
+namespace model
+{
 
 const std::string Quad::cClassName = "Quad";
 
