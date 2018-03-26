@@ -7,7 +7,8 @@
 #include <string>
 #include <vector>
 
-namespace model {
+namespace model
+{
 
 class PrimitiveModel : public Model
 {

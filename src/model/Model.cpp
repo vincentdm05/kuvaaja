@@ -1,7 +1,7 @@
 #include "model/Model.hpp"
 
-namespace model {
-
+namespace model
+{
 
 Model::Model()
   : Model(true)

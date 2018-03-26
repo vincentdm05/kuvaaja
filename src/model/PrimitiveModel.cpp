@@ -1,6 +1,7 @@
 #include "model/PrimitiveModel.hpp"
 
-namespace model {
+namespace model
+{
 
 PrimitiveModel::Blueprints PrimitiveModel::cBlueprints;
 
