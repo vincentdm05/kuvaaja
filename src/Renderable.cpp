@@ -1,5 +1,6 @@
 #include "Renderable.hpp"
 
+#include "Debug.hpp"
 #include "Material.hpp"
 #include "model/Model.hpp"
 
@@ -89,6 +90,8 @@ void Renderable::render() const
   glDisableVertexAttribArray(0);
 
   glBindVertexArray(0);
+
+  printOpenGlErrors("Renderable::render()");
 }
 
 void Renderable::deleteBuffer(GLuint &bufferName)
