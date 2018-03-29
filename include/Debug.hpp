@@ -6,45 +6,80 @@
 #include <iostream>
 #include <string>
 
-static void printOpenGlErrors(const std::string &context, bool verbose = false)
+enum GlErrorType
+{
+  InvalidEnum = 1,
+  InvalidValue = InvalidEnum << 1,
+  InvalidOperation = InvalidValue << 1,
+  InvalidFramebufferOperation = InvalidOperation << 1,
+  OutOfMemory = InvalidFramebufferOperation << 1,
+  StackUnderflow = OutOfMemory << 1,
+  StackOverflow = StackUnderflow << 1
+};
+
+static void printOpenGlErrors(const std::string &context, bool onlyOnce = true, bool verbose = false)
 {
 #ifdef KUVAAJA_DEBUG
-  GLenum err_code = glGetError();
-  while( GL_NO_ERROR != err_code )
+  static uint32_t errorMask = 0;
+  GLenum errorCode;
+  while ((errorCode = glGetError()) != GL_NO_ERROR)
   {
     std::string info = "";
-    if (verbose)
-    {
-      info = " -- ";
-      switch (err_code) {
-      case GL_INVALID_ENUM:
-        info += "Invalid enum: An unacceptable value is specified for an enumerated argument. The offending command is ignored and has no other side effect than to set the error flag.";
-        break;
-      case GL_INVALID_VALUE:
-        info += "Invalid value: A numeric argument is out of range. The offending command is ignored and has no other side effect than to set the error flag.";
-        break;
-      case GL_INVALID_OPERATION:
-        info += "Invalid operation: An operation is not allowed in the current state. The offending command is ignored and has no other side effect than to set the error flag.";
-        break;
-      case GL_INVALID_FRAMEBUFFER_OPERATION:
-        info += "Invalid framebuffer operation: The framebuffer object is not complete. The offending command is ignored and has no other side effect than to set the error flag.";
-        break;
-      case GL_OUT_OF_MEMORY:
-        info += "Out of memory: There is not enough memory left to execute the command. The state of the GL is undefined, except for the state of the error flags, after this error is recorded.";
-        break;
-      case GL_STACK_UNDERFLOW:
-        info += "Stack underflow: An attempt has been made to perform an operation that would cause an internal stack to underflow.";
-        break;
-      case GL_STACK_OVERFLOW:
-        info += "Stack overflow: An attempt has been made to perform an operation that would cause an internal stack to overflow.";
-        break;
-      default:
-        info += "Unrecognised error code.";
-        break;
-      }
+    bool ignoreError = false;
+
+    switch (errorCode) {
+    case GL_INVALID_ENUM:
+      if (verbose)
+        info = "Invalid enum: An unacceptable value is specified for an enumerated argument. The offending command is ignored and has no other side effect than to set the error flag.";
+      ignoreError |= (onlyOnce && (errorMask & InvalidEnum));
+      errorMask |= InvalidEnum;
+      break;
+    case GL_INVALID_VALUE:
+      if (verbose)
+        info = "Invalid value: A numeric argument is out of range. The offending command is ignored and has no other side effect than to set the error flag.";
+      ignoreError |= (onlyOnce && (errorMask & InvalidValue));
+      errorMask |= InvalidValue;
+      break;
+    case GL_INVALID_OPERATION:
+      if (verbose)
+        info = "Invalid operation: An operation is not allowed in the current state. The offending command is ignored and has no other side effect than to set the error flag.";
+      ignoreError |= (onlyOnce && (errorMask & InvalidOperation));
+      errorMask |= InvalidOperation;
+      break;
+    case GL_INVALID_FRAMEBUFFER_OPERATION:
+      if (verbose)
+        info = "Invalid framebuffer operation: The framebuffer object is not complete. The offending command is ignored and has no other side effect than to set the error flag.";
+      ignoreError |= (onlyOnce && (errorMask & InvalidFramebufferOperation));
+      errorMask |= InvalidFramebufferOperation;
+      break;
+    case GL_OUT_OF_MEMORY:
+      if (verbose)
+        info = "Out of memory: There is not enough memory left to execute the command. The state of the GL is undefined, except for the state of the error flags, after this error is recorded.";
+      ignoreError |= (onlyOnce && (errorMask & OutOfMemory));
+      errorMask |= OutOfMemory;
+      break;
+    case GL_STACK_UNDERFLOW:
+      if (verbose)
+        info = "Stack underflow: An attempt has been made to perform an operation that would cause an internal stack to underflow.";
+      ignoreError |= (onlyOnce && (errorMask & StackUnderflow));
+      errorMask |= StackUnderflow;
+      break;
+    case GL_STACK_OVERFLOW:
+      if (verbose)
+        info = "Stack overflow: An attempt has been made to perform an operation that would cause an internal stack to overflow.";
+      ignoreError |= (onlyOnce && (errorMask & StackOverflow));
+      errorMask |= StackOverflow;
+      break;
+    default:
+      info = "Unrecognised error code.";
+      break;
     }
-    std::cerr << "OpenGL Error: 0x" << std::hex << err_code << " in " << context << info << std::endl;
-    err_code = glGetError();
+
+    if (info.size() > 0)
+      info = " -- " + info;
+
+    if (!ignoreError)
+      std::cerr << "OpenGL Error: 0x" << std::hex << errorCode << " in " << context << info << std::endl;
   }
 #endif
 }
