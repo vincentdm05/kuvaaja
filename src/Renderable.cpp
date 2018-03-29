@@ -1,5 +1,6 @@
 #include "Renderable.hpp"
 
+#include "Debug.hpp"
 #include "Material.hpp"
 
 Renderable::Renderable()
@@ -58,6 +59,8 @@ void Renderable::render() const
   glDisableVertexAttribArray(0);
 
   glBindVertexArray(0);
+
+  printOpenGlErrors("Renderable::render()");
 }
 
 void Renderable::setVaoData(const GLfloat *data, GLuint &bufferName, unsigned int count, unsigned int cardinality)

@@ -1,5 +1,6 @@
 #include "Scene.hpp"
 
+#include "Debug.hpp"
 #include "Camera.hpp"
 #include "DirectionalLight.hpp"
 #include "Material.hpp"
@@ -10,7 +11,8 @@
 #include "Texture.hpp"
 
 Scene::Scene()
-  : mCamera(NULL)
+  : mFrameNumber(0)
+  , mCamera(NULL)
   , mAmbientLight(1.0f, 1.0f, 1.0f, 1.0f)
 {
   setupGL();
@@ -37,7 +39,7 @@ void Scene::deleteAllLights()
 }
 
 // This is a naive rendering method, it should be improved in the future.
-void Scene::render() const
+void Scene::render()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -101,6 +103,10 @@ void Scene::render() const
     if (texture)
       glBindTexture(GL_TEXTURE_2D, 0);
   }
+
+  printOpenGlErrors(std::string("Scene::render() @frame #") + std::to_string(mFrameNumber));
+
+  mFrameNumber++;
 }
 
 void Scene::setupGL() const

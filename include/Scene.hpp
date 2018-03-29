@@ -30,9 +30,10 @@ public:
   void deleteAllRenderables();
   void deleteAllLights();
 
-  void render() const;
+  void render();
 
 private:
+  unsigned int mFrameNumber;
   Camera *mCamera;
   std::vector<Renderable *> mRenderables;
 

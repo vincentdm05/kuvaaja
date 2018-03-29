@@ -1,5 +1,6 @@
 #include "Context.hpp"
 
+#include "Debug.hpp"
 #include "Scene.hpp"
 
 Context::Context()
@@ -57,6 +58,8 @@ void Context::render()
   glfwSwapBuffers(mWindow);
 
   glfwPollEvents();
+
+  printOpenGlErrors("Context::render()");
 }
 
 bool Context::canRender() const
