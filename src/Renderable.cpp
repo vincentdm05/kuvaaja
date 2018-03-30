@@ -49,46 +49,52 @@ void Renderable::render() const
     return;
 
   glBindVertexArray(mVertexArrayName);
-
-  // Draw data
-  GLuint attribArrayNumber = 0;
-  glEnableVertexAttribArray(attribArrayNumber);
-  glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferName);
-  glVertexAttribPointer(attribArrayNumber, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-  attribArrayNumber++;
-  glEnableVertexAttribArray(attribArrayNumber);
-  glBindBuffer(GL_ARRAY_BUFFER, mNormalBufferName);
-  glVertexAttribPointer(attribArrayNumber, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-  if (mColorBufferName != 0)
   {
-    attribArrayNumber++;
+    // Enable
+    GLuint attribArrayNumber = 0;
     glEnableVertexAttribArray(attribArrayNumber);
-    glBindBuffer(GL_ARRAY_BUFFER, mColorBufferName);
+    glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferName);
     glVertexAttribPointer(attribArrayNumber, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-  }
 
-  if (mUvBufferName != 0)
-  {
     attribArrayNumber++;
     glEnableVertexAttribArray(attribArrayNumber);
-    glBindBuffer(GL_ARRAY_BUFFER, mUvBufferName);
-    glVertexAttribPointer(attribArrayNumber, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-  }
+    glBindBuffer(GL_ARRAY_BUFFER, mNormalBufferName);
+    glVertexAttribPointer(attribArrayNumber, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-  if (mIndexBufferName != 0)
-  {
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferName);
-    glDrawElements(GL_TRIANGLES, mModel->indexCount(), GL_UNSIGNED_INT, (void*)0);
-  }
-  else
-  {
-    glDrawArrays(GL_TRIANGLES, 0, mModel->vertexCount());
-  }
+    if (mColorBufferName != 0)
+    {
+      attribArrayNumber++;
+      glEnableVertexAttribArray(attribArrayNumber);
+      glBindBuffer(GL_ARRAY_BUFFER, mColorBufferName);
+      glVertexAttribPointer(attribArrayNumber, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    }
 
-  glDisableVertexAttribArray(0);
+    if (mUvBufferName != 0)
+    {
+      attribArrayNumber++;
+      glEnableVertexAttribArray(attribArrayNumber);
+      glBindBuffer(GL_ARRAY_BUFFER, mUvBufferName);
+      glVertexAttribPointer(attribArrayNumber, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    }
 
+    // Draw
+    if (mIndexBufferName != 0)
+    {
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferName);
+      glDrawElements(GL_TRIANGLES, mModel->indexCount(), GL_UNSIGNED_INT, (void*)0);
+    }
+    else
+    {
+      glDrawArrays(GL_TRIANGLES, 0, mModel->vertexCount());
+    }
+
+    // Disable
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    while (attribArrayNumber)
+      glDisableVertexAttribArray(attribArrayNumber--);
+
+  }
   glBindVertexArray(0);
 
   printOpenGlErrors("Renderable::render()");
