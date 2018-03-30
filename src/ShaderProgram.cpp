@@ -4,8 +4,6 @@
 #include <iostream>
 #include <vector>
 
-GLuint ShaderProgram::cTextureUnits = 0;
-
 ShaderProgram::ShaderProgram()
   : mProgramName(0)
   , mVertexShaderName(0)
@@ -17,9 +15,8 @@ ShaderProgram::ShaderProgram()
   , mDirectionalLightsLocation(0)
   , mSpotLightsLocation(0)
   , mTextureLocation(0)
-{
-  mTextureUnit = cTextureUnits++;
-}
+  , mTextureUnit(0)
+{}
 
 ShaderProgram::~ShaderProgram()
 {

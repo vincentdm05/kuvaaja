@@ -55,8 +55,6 @@ private:
   GLuint mDirectionalLightsLocation;
   GLuint mSpotLightsLocation;
   GLuint mTextureLocation;
-
-  static GLuint cTextureUnits;
   GLuint mTextureUnit;
 
   void releaseShader(GLuint &shaderName);
