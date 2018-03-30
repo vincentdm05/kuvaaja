@@ -93,7 +93,7 @@ void Scene::render()
     {
       GLuint textureUnit = program->textureUnit();
       GLuint textureLocation = program->textureLocation();
-      glActiveTexture(textureUnit);
+      glActiveTexture(GL_TEXTURE0 + textureUnit);
       glBindTexture(GL_TEXTURE_2D, texture->name());
       glUniform1i(textureLocation, textureUnit);
     }
