@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
   texturedMaterial.setProgram(&shaderProgram);
   Texture texture;
 //  texture.loadTestData();
-  texture.load(getProjectRoot() + "/resources/images/img_test.png");
+  texture.load(getProjectRoot() + "/resources/images/img_test.png", Texture::Type::ALBEDO);
   texturedMaterial.setTexture(&texture);
   Material triangleMaterial;
   triangleMaterial.setProgram(&shaderProgram);

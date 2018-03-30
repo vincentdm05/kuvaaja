@@ -4,6 +4,7 @@
 
 Texture::Texture()
   : mTextureName(0)
+  , mType(NONE)
   , mWidth(0)
   , mHeight(0)
 {
@@ -12,6 +13,8 @@ Texture::Texture()
 
 void Texture::loadTestData()
 {
+  mType = ALBEDO;
+
   const GLuint data[] =
   {
     0x000000FF, 0xFF0000FF, 0xFFFFFFFF, 0xFFFFFFFF,
@@ -33,8 +36,10 @@ void Texture::loadTestData()
   glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Texture::load(const std::string &path)
+void Texture::load(const std::string &path, Type type)
 {
+  mType = type;
+
   mTextureName = SOIL_load_OGL_texture(path.c_str(), SOIL_LOAD_AUTO, mTextureName,
                                        SOIL_FLAG_MIPMAPS |
                                        SOIL_FLAG_TEXTURE_REPEATS |
