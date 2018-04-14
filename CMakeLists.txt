@@ -2,12 +2,15 @@ cmake_minimum_required(VERSION 3.0.2)
 project(kuvaaja)
 
 # Compile with C++11
-set (CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
+
+# Output all warnings in debug
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 
 # Glew
 set(GLEW_VERSION "2.1.0")
 
-# Compile external libraries
+# Build external libraries
 add_subdirectory(external/)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
