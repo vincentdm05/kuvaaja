@@ -6,8 +6,9 @@
 #include "DirectionalLight.hpp"
 #include "Material.hpp"
 #include "model/Box.hpp"
-#include "model/Triangle.hpp"
+#include "model/Model.hpp"
 #include "model/Quad.hpp"
+#include "model/Triangle.hpp"
 #include "Renderable.hpp"
 #include "Scene.hpp"
 #include "ShaderProgram.hpp"
@@ -83,6 +84,7 @@ int main(int argc, char *argv[])
   model::Box boxModel;
   model::Triangle triangleModel;
   model::Quad quadModel;
+  model::Model teapotModel(getProjectRoot() + "/resources/models/teapot.obj");
 
   Renderable cube;
   cube.setMaterial(&cubeMaterial);
@@ -117,6 +119,12 @@ int main(int argc, char *argv[])
   quad.setModel(&quadModel);
   scene.addRenderable(&quad);
   quad.translate(-3, 0, -4);
+
+  Renderable teapot;
+  teapot.setMaterial(&triangleMaterial);
+  teapot.setModel(&teapotModel);
+  scene.addRenderable(&teapot);
+  teapot.translate(-3, 1, 0);
 
   // Generic controls
   Control control;

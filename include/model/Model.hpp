@@ -12,6 +12,7 @@ class Model
 {
 public:
   Model();
+  Model(const std::string &path);
   virtual ~Model();
 
   unsigned int vertexCount() const { return mVertices ? mVertices->size() : 0; }
@@ -21,6 +22,9 @@ public:
   const std::vector<glm::vec3> &normals() const { return *mNormals; }
   const std::vector<glm::vec3> &vertexColors() const { return *mVertexColors; }
   const std::vector<glm::vec2> &uvs() const { return *mUVs; }
+
+  // Temporary loader
+  bool loadObj(const std::string &path);
 
 protected:
   Model(bool initialise);
