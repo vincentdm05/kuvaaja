@@ -47,3 +47,12 @@ target_link_libraries(GLEW
 ### SOIL ###
 
 add_subdirectory(soil)
+
+### ASSIMP ###
+
+set(ASSIMP_NO_EXPORT true)
+set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT false)
+
+set(ASSIMP_BUILD_OBJ_IMPORTER true)
+
+add_subdirectory(assimp)

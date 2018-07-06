@@ -24,6 +24,7 @@ configure_file(include/Config.hpp.in ${CMAKE_CURRENT_SOURCE_DIR}/build/generated
 
 include_directories(
   build/generated/
+  external/assimp/include/
   external/glew-${GLEW_VERSION}/include/
   external/glfw/include/
   external/glm/
