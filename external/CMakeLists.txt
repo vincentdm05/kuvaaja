@@ -44,3 +44,7 @@ target_link_libraries(GLEW
 ### SOIL ###
 
 add_subdirectory(soil)
+
+### TINYOBJLOADER ###
+
+add_subdirectory(tinyobjloader)

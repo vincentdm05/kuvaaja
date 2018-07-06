@@ -28,6 +28,7 @@ include_directories(
   external/glfw/include/
   external/glm/
   external/soil/src/
+  external/tinyobjloader/
   include/
   include/model/
 )
@@ -37,6 +38,7 @@ set(ALL_LIBS
   GLEW
   glfw
   SOIL
+  tinyobjloader
 )
 
 # Specify output binary directory
