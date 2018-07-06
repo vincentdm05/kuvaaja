@@ -1,17 +1,10 @@
-
-add_definitions(
-  -DGLEW_STATIC
-)
-
-include_directories(
-  glfw/include/GLFW/
-  glew-${GLEW_VERSION}/include/
-)
+#### External libraries
+cmake_minimum_required(VERSION 3.0.2)
 
 ### GLFW ###
-set(GLFW_BUILD_EXAMPLES false)
-set(GLFW_BUILD_TESTS false)
-set(GLFW_BUILD_DOCS false)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "")
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "")
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "")
 
 add_subdirectory(glfw)
 
@@ -31,6 +24,10 @@ set(OPENGL_LIBRARY
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 ### GLEW ###
+
+add_definitions(
+  -DGLEW_STATIC
+)
 
 set(GLEW_SOURCE
   glew-${GLEW_VERSION}/src/glew.c
