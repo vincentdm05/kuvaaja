@@ -26,11 +26,16 @@ fi
 root_dir=`pwd`
 build_dir="$root_dir"/build/$build_dir
 
-if [[ -e "$build_dir" && ! -d "$build_dir" ]]; then
-  printf "The build directory cannot be created." 1>&2
+errorExit()
+{
+  printf "$1\n" 1>&2
   exit 1
+}
+
+if [[ -e "$build_dir" && ! -d "$build_dir" ]]; then
+  errorExit "The build directory cannot be created."
 elif [ ! -d "$build_dir" ]; then
-  mkdir "$build_dir"
+  mkdir -p "$build_dir" || errorExit "Could not create ${build_dir}."
 fi
 
 cd "$build_dir"
