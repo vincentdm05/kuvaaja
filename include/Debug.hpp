@@ -17,7 +17,7 @@ enum GlErrorType
   StackOverflow = StackUnderflow << 1
 };
 
-static void printOpenGlErrors(const std::string &context, bool onlyOnce = true, bool verbose = false)
+inline void printOpenGlErrors(const std::string &context, bool onlyOnce = true, bool verbose = false)
 {
 #ifdef KUVAAJA_DEBUG
   static uint32_t errorMask = 0;
@@ -84,7 +84,7 @@ static void printOpenGlErrors(const std::string &context, bool onlyOnce = true, 
 #endif
 }
 
-static void printOpenGlState(const std::string &context)
+inline void printOpenGlState(const std::string &context)
 {
   std::cout << context << std::endl;
   GLint dataInt;
