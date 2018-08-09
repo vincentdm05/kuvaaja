@@ -23,8 +23,7 @@ public:
   const std::vector<glm::vec3> &vertexColors() const { return *mVertexColors; }
   const std::vector<glm::vec2> &uvs() const { return *mUVs; }
 
-  // Temporary loader
-  bool loadObj(const std::string &path);
+  bool loadFromFile(const std::string &path);
 
 protected:
   Model(bool initialise);
@@ -38,6 +37,7 @@ protected:
 
 private:
   void init();
+  void reset();
 };
 
 } // namespace model

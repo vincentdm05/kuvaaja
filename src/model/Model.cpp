@@ -1,7 +1,11 @@
 #include "model/Model.hpp"
 
+#define TINYOBJLOADER_IMPLEMENTATION
+#include "tiny_obj_loader.h"
+
 #include <stdio.h>
 #include <string>
+#include <vector>
 
 namespace model
 {
@@ -13,22 +17,12 @@ Model::Model()
 Model::Model(const std::string &path)
   : Model(true)
 {
-  loadObj(path);
+  loadFromFile(path);
 }
 
 Model::~Model()
 {
-  if (mIndices)
-    mIndices->clear();
-  if (mVertices)
-    mVertices->clear();
-  if (mNormals)
-    mNormals->clear();
-  if (mVertexColors)
-    mVertexColors->clear();
-  if (mUVs)
-    mUVs->clear();
-
+  reset();
   delete mIndices;
   delete mVertices;
   delete mNormals;
@@ -36,94 +30,87 @@ Model::~Model()
   delete mUVs;
 }
 
-bool Model::loadObj(const std::string &path)
+bool Model::loadFromFile(const std::string &path)
 {
-  std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
-  std::vector<glm::vec3> tempVertices;
-  std::vector<glm::vec2> tempUvs;
-  std::vector<glm::vec3> tempNormals;
+  tinyobj::attrib_t attrib;
+  std::vector<tinyobj::shape_t> shapes;
+  std::vector<tinyobj::material_t> materials;
+  std::string err;
 
-  FILE *file = fopen(path.c_str(), "r");
-  if (file == NULL)
+  if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &err, path.c_str(), nullptr))
   {
-    printf("Impossible to open the file.\n");
-    getchar();
+    fprintf(stderr, "%s\n", err.c_str());
     return false;
   }
 
-  while(1)
+  // Shapes
+  for (const tinyobj::shape_t &shape : shapes)
   {
-    char lineHeader[128];
-    // Read the first word of the line
-    int res = fscanf(file, "%s", lineHeader);
-    if (res == EOF)
-      break;
+    const tinyobj::mesh_t &mesh = shape.mesh;
 
-    if (strcmp(lineHeader, "v") == 0)
+    unsigned int maxIndices = mVertices->size() + mesh.indices.size();
+    mVertices->reserve(maxIndices);
+    mNormals->reserve(maxIndices);
+    mVertexColors->reserve(maxIndices);
+    mUVs->reserve(maxIndices);
+
+    // Indices index
+    unsigned int ii = 0;
+
+    // Faces
+    for (unsigned int fi = 0; fi < mesh.num_face_vertices.size(); fi++)
     {
-      glm::vec3 vertex;
-      fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
-      tempVertices.push_back(vertex);
-    }
-    else if (strcmp(lineHeader, "vt") == 0)
-    {
-      glm::vec2 uv;
-      fscanf(file, "%f %f\n", &uv.x, &uv.y);
-      uv.y = -uv.y;
-      tempUvs.push_back(uv);
-    }
-    else if (strcmp(lineHeader, "vn") == 0)
-    {
-      glm::vec3 normal;
-      fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
-      tempNormals.push_back(normal);
-    }
-    else if (strcmp(lineHeader, "f") == 0)
-    {
-      unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
-      int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
-      if (matches != 9){
-        printf("File can't be read.\n");
-        fclose(file);
-        return false;
+      unsigned int nFaceVertices = mesh.num_face_vertices[fi];
+
+      // Ignore non-triangles
+      if (nFaceVertices != 3)
+      {
+        ii += nFaceVertices;
+        continue;
       }
-      vertexIndices.push_back(vertexIndex[0]);
-      vertexIndices.push_back(vertexIndex[1]);
-      vertexIndices.push_back(vertexIndex[2]);
-      uvIndices.push_back(uvIndex[0]);
-      uvIndices.push_back(uvIndex[1]);
-      uvIndices.push_back(uvIndex[2]);
-      normalIndices.push_back(normalIndex[0]);
-      normalIndices.push_back(normalIndex[1]);
-      normalIndices.push_back(normalIndex[2]);
-    }
-    else
-    {
-      // Probably a comment, eat up the rest of the line
-      char stupidBuffer[1000];
-      fgets(stupidBuffer, 1000, file);
+
+      // Vertices
+      for (unsigned int fvi = 0; fvi < nFaceVertices; fvi++, ii++)
+      {
+        const tinyobj::index_t &indices = mesh.indices[ii];
+        int vi = indices.vertex_index;
+        int ni = indices.normal_index;
+        int tci = indices.texcoord_index;
+
+        if (vi < 0)
+        {
+          // TODO
+        }
+        else
+        {
+          mVertices->push_back(glm::vec3(attrib.vertices[3 * vi], attrib.vertices[3 * vi + 1], attrib.vertices[3 * vi + 2]));
+        }
+
+        if (ni < 0)
+        {
+          // TODO
+        }
+        else
+        {
+          mNormals->push_back(glm::vec3(attrib.normals[3 * ni], attrib.normals[3 * ni + 1], attrib.normals[3 * ni + 2]));
+        }
+
+        if (tci < 0)
+        {
+          // TODO
+        }
+        else
+        {
+          mUVs->push_back(glm::vec2(attrib.texcoords[2 * tci], attrib.texcoords[2 * tci + 1]));
+        }
+
+        mVertexColors->push_back(glm::vec3(1, 0, 0));
+
+        // TODO: use a set to uniquely store tuples
+        mIndices->push_back(ii);
+      }
     }
   }
-
-  // For each vertex of each triangle
-  for (unsigned int i=0; i<vertexIndices.size(); i++)
-  {
-    // Get the indices of its attributes
-    unsigned int vertexIndex = vertexIndices[i];
-    unsigned int uvIndex = uvIndices[i];
-    unsigned int normalIndex = normalIndices[i];
-
-    // Get the attributes thanks to the index
-    glm::vec3 vertex = tempVertices[vertexIndex-1];
-    glm::vec2 uv = tempUvs[uvIndex-1];
-    glm::vec3 normal = tempNormals[normalIndex-1];
-
-    // Put the attributes in buffers
-    mVertices->push_back(vertex);
-    mUVs->push_back(uv);
-    mNormals->push_back(normal);
-  }
-  fclose(file);
 
   return true;
 }
@@ -151,6 +138,20 @@ void Model::init()
   mNormals = new std::vector<glm::vec3>();
   mVertexColors = new std::vector<glm::vec3>();
   mUVs = new std::vector<glm::vec2>();
+}
+
+void Model::reset()
+{
+  if (mIndices)
+    mIndices->clear();
+  if (mVertices)
+    mVertices->clear();
+  if (mNormals)
+    mNormals->clear();
+  if (mVertexColors)
+    mVertexColors->clear();
+  if (mUVs)
+    mUVs->clear();
 }
 
 } // namespace model
