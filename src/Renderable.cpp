@@ -56,10 +56,13 @@ void Renderable::render() const
     glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferName);
     glVertexAttribPointer(attribArrayNumber, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-    attribArrayNumber++;
-    glEnableVertexAttribArray(attribArrayNumber);
-    glBindBuffer(GL_ARRAY_BUFFER, mNormalBufferName);
-    glVertexAttribPointer(attribArrayNumber, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    if (mNormalBufferName)
+    {
+      attribArrayNumber++;
+      glEnableVertexAttribArray(attribArrayNumber);
+      glBindBuffer(GL_ARRAY_BUFFER, mNormalBufferName);
+      glVertexAttribPointer(attribArrayNumber, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    }
 
     if (mColorBufferName != 0)
     {
