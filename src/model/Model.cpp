@@ -3,6 +3,7 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
 
+#include <map>
 #include <stdio.h>
 #include <string>
 #include <vector>
@@ -43,6 +44,31 @@ bool Model::loadFromFile(const std::string &path)
     return false;
   }
 
+  struct TupleKey
+  {
+    int vi;
+    int ni;
+    int tci;
+    TupleKey(int _vi, int _ni, int _tci)
+      : vi(_vi)
+      , ni(_ni)
+      , tci(_tci)
+    {}
+    bool operator<(const TupleKey &o) const
+    {
+      return vi < o.vi || ni < o.ni || tci < o.tci;
+    }
+  };
+  struct TupleValue
+  {
+    int i;
+    TupleValue()
+      : i(-1)
+    {}
+  };
+  std::map<TupleKey, TupleValue> indexTuples;
+  int lastIndex = 0;
+
   // Shapes
   for (const tinyobj::shape_t &shape : shapes)
   {
@@ -77,37 +103,44 @@ bool Model::loadFromFile(const std::string &path)
         int ni = indices.normal_index;
         int tci = indices.texcoord_index;
 
-        if (vi < 0)
+        TupleValue &tupleValue = indexTuples[TupleKey(vi, ni, tci)];
+        if (tupleValue.i < 0)
         {
-          // TODO
-        }
-        else
-        {
-          mVertices->push_back(glm::vec3(attrib.vertices[3 * vi], attrib.vertices[3 * vi + 1], attrib.vertices[3 * vi + 2]));
+          // Tuple is new, add index
+          tupleValue.i = lastIndex++;
+
+          if (vi < 0)
+          {
+            // TODO
+          }
+          else
+          {
+            mVertices->push_back(glm::vec3(attrib.vertices[3 * vi], attrib.vertices[3 * vi + 1], attrib.vertices[3 * vi + 2]));
+          }
+
+          if (ni < 0)
+          {
+            // TODO
+          }
+          else
+          {
+            mNormals->push_back(glm::vec3(attrib.normals[3 * ni], attrib.normals[3 * ni + 1], attrib.normals[3 * ni + 2]));
+          }
+
+          if (tci < 0)
+          {
+            // TODO
+          }
+          else
+          {
+            mUVs->push_back(glm::vec2(attrib.texcoords[2 * tci], attrib.texcoords[2 * tci + 1]));
+          }
+
+          // Make up new color
+          mVertexColors->push_back(glm::vec3(1, 0, 0));
         }
 
-        if (ni < 0)
-        {
-          // TODO
-        }
-        else
-        {
-          mNormals->push_back(glm::vec3(attrib.normals[3 * ni], attrib.normals[3 * ni + 1], attrib.normals[3 * ni + 2]));
-        }
-
-        if (tci < 0)
-        {
-          // TODO
-        }
-        else
-        {
-          mUVs->push_back(glm::vec2(attrib.texcoords[2 * tci], attrib.texcoords[2 * tci + 1]));
-        }
-
-        mVertexColors->push_back(glm::vec3(1, 0, 0));
-
-        // TODO: use a set to uniquely store tuples
-        mIndices->push_back(ii);
+        mIndices->push_back(tupleValue.i);
       }
     }
   }
