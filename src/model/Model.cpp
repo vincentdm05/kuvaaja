@@ -38,7 +38,7 @@ bool Model::loadFromFile(const std::string &path)
   std::vector<tinyobj::material_t> materials;
   std::string err;
 
-  if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &err, path.c_str(), nullptr))
+  if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &err, path.c_str(), nullptr) || !err.empty())
   {
     fprintf(stderr, "%s\n", err.c_str());
     return false;
