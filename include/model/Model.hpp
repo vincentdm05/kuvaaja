@@ -38,6 +38,7 @@ protected:
 private:
   void init();
   void reset();
+  glm::vec3 computeNormal(const glm::vec3 &v0, const glm::vec3 &v1, const glm::vec3 &v2) const;
 };
 
 } // namespace model

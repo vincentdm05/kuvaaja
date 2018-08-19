@@ -46,17 +46,24 @@ bool Model::loadFromFile(const std::string &path)
 
   struct TupleKey
   {
-    int vi;
-    int ni;
-    int tci;
-    TupleKey(int _vi, int _ni, int _tci)
-      : vi(_vi)
-      , ni(_ni)
-      , tci(_tci)
+    glm::vec3 vertex;
+    glm::vec3 normal;
+    glm::vec2 uv;
+    TupleKey()
+      : vertex(glm::vec3(0, 0, 0))
+      , normal(glm::vec3(0, 0, 0))
+      , uv(glm::vec2(0, 0))
+    {}
+    TupleKey(const glm::vec3 &v, const glm::vec3 &n, const glm::vec2 &c)
+      : vertex(v)
+      , normal(n)
+      , uv(c)
     {}
     bool operator<(const TupleKey &o) const
     {
-      return vi < o.vi || ni < o.ni || tci < o.tci;
+      return vertex[0] < o.vertex[0] || vertex[1] < o.vertex[1] || vertex[2] < o.vertex[2]
+        || normal[0] < o.normal[0] || normal[1] < o.normal[1] || normal[2] < o.normal[2]
+        || uv[0] < o.uv[0] || uv[1] < o.uv[1];
     }
   };
   struct TupleValue
@@ -66,7 +73,7 @@ bool Model::loadFromFile(const std::string &path)
       : i(-1)
     {}
   };
-  std::map<TupleKey, TupleValue> indexTuples;
+  std::map<TupleKey, TupleValue> primitiveTuples;
   int lastIndex = 0;
 
   // Shapes
@@ -95,53 +102,60 @@ bool Model::loadFromFile(const std::string &path)
         continue;
       }
 
-      // Vertices
-      for (unsigned int fvi = 0; fvi < nFaceVertices; fvi++, ii++)
+      glm::vec3 vertices[nFaceVertices];
+      int normalIndices[nFaceVertices];
+      bool normalsMissing = false;
+      int uvIndices[nFaceVertices];
+      for (unsigned int fvi = 0; fvi < nFaceVertices; fvi++)
       {
-        const tinyobj::index_t &indices = mesh.indices[ii];
+        const tinyobj::index_t &indices = mesh.indices[ii + fvi];
         int vi = indices.vertex_index;
+        vertices[fvi] = glm::vec3(attrib.vertices[3 * vi], attrib.vertices[3 * vi + 1], attrib.vertices[3 * vi + 2]);
         int ni = indices.normal_index;
-        int tci = indices.texcoord_index;
-
-        TupleValue &tupleValue = indexTuples[TupleKey(vi, ni, tci)];
-        if (tupleValue.i < 0)
-        {
-          // Tuple is new, add index
-          tupleValue.i = lastIndex++;
-
-          if (vi < 0)
-          {
-            // TODO
-          }
-          else
-          {
-            mVertices->push_back(glm::vec3(attrib.vertices[3 * vi], attrib.vertices[3 * vi + 1], attrib.vertices[3 * vi + 2]));
-          }
-
-          if (ni < 0)
-          {
-            // TODO
-          }
-          else
-          {
-            mNormals->push_back(glm::vec3(attrib.normals[3 * ni], attrib.normals[3 * ni + 1], attrib.normals[3 * ni + 2]));
-          }
-
-          if (tci < 0)
-          {
-            // TODO
-          }
-          else
-          {
-            mUVs->push_back(glm::vec2(attrib.texcoords[2 * tci], attrib.texcoords[2 * tci + 1]));
-          }
-
-          // Make up new color
-          mVertexColors->push_back(glm::vec3(1, 0, 0));
-        }
-
-        mIndices->push_back(tupleValue.i);
+        if (ni == -1)
+          normalsMissing = true;
+        normalIndices[fvi] = ni;
+        uvIndices[fvi] = indices.texcoord_index;
       }
+
+      glm::vec3 faceNormal;
+      if (normalsMissing)
+        faceNormal = computeNormal(vertices[0], vertices[1], vertices[2]);
+
+      // Add the data
+      for (unsigned int fvi = 0; fvi < nFaceVertices; fvi++)
+      {
+        const glm::vec3 &vertex = vertices[fvi];
+
+        glm::vec3 normal;
+        int ni = normalIndices[fvi];
+        if (ni < 0)
+          normal = faceNormal;
+        else
+          normal = glm::vec3(attrib.normals[3 * ni], attrib.normals[3 * ni + 1], attrib.normals[3 * ni + 2]);
+
+        glm::vec2 uv;
+        int uvi = uvIndices[fvi];
+        if (uvi == -1)
+          uv = glm::vec2(0, 0);
+        else
+          uv = glm::vec2(attrib.texcoords[2 * uvi], attrib.texcoords[2 * uvi + 1]);
+
+        TupleValue &tupleIndex = primitiveTuples[TupleKey(vertex, normal, uv)];
+        if (tupleIndex.i == -1)
+        {
+          mVertices->push_back(vertex);
+          mNormals->push_back(normal);
+          mUVs->push_back(uv);
+          mVertexColors->push_back(normal * 0.5f + 0.5f);
+
+          int index = lastIndex++;
+          tupleIndex.i = index;
+        }
+        mIndices->push_back(tupleIndex.i);
+      }
+
+      ii += nFaceVertices;
     }
   }
 
@@ -185,6 +199,20 @@ void Model::reset()
     mVertexColors->clear();
   if (mUVs)
     mUVs->clear();
+}
+
+glm::vec3 Model::computeNormal(const glm::vec3 &v0, const glm::vec3 &v1, const glm::vec3 &v2) const
+{
+  glm::vec3 v01 = v1 - v0;
+  glm::vec3 v02 = v2 - v0;
+  glm::vec3 n = glm::cross(v01, v02);
+  float length2 = n[0] * n[0] + n[1] * n[1] + n[2] * n[2];
+  if (length2 > 0)
+  {
+    float length = sqrt(length2);
+    n /= length;
+  }
+  return n;
 }
 
 } // namespace model
