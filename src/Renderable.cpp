@@ -30,6 +30,9 @@ Renderable::~Renderable()
 void Renderable::setModel(model::Model *model)
 {
   mModel = model;
+  if (!mModel)
+    return;
+
   setVaoIndices(mModel->indices());
   setVaoData(mModel->vertices(), mVertexBufferName);
   setVaoData(mModel->normals(), mNormalBufferName);
